@@ -19,8 +19,10 @@ test("Sites candidate keeps hosting stateless and removes starter metadata", asy
   const hosting = JSON.parse(hostingText) as Record<string, unknown>;
   const packageJson = JSON.parse(packageText) as { dependencies?: Record<string, string> };
 
-  assert.deepEqual(hosting, { d1: null, r2: null });
-  assert.equal("project_id" in hosting, false);
+  assert.equal(typeof hosting.project_id, "string");
+  assert.match(hosting.project_id as string, /^appgprj_[a-z0-9]+$/);
+  assert.equal(hosting.d1, null);
+  assert.equal(hosting.r2, null);
   assert.doesNotMatch(page, /codex-preview|SkeletonPreview|_sites-preview/);
   assert.match(page, /GreenProof · Shared rooftop evidence/);
   assert.match(layout, /GreenProof · Local energy evidence/);
