@@ -22,12 +22,14 @@ export function preparePilotScenario(scenario: Scenario): Scenario {
     const targetPeakWh = PILOT_TENANT_PEAKS_W[tenant.id as keyof typeof PILOT_TENANT_PEAKS_W];
     if (!targetPeakWh || !sourcePeakWh) return tenant;
     const demandScale = targetPeakWh / sourcePeakWh;
+    const pilotLabel = tenant.id === "tenant-a" ? "Tenant A · variable schedule" : "Tenant B · steady base";
     return {
       ...tenant,
+      label: pilotLabel,
       description: `${tenant.description} The source shape is scaled to a ${targetPeakWh / 1000} kW pilot peak.`,
       demand: {
         ...tenant.demand,
-        label: `${tenant.label} demand · pilot-scaled`,
+        label: `${pilotLabel} demand · pilot-scaled`,
         points: tenant.demand.points.map((point) => ({
           ...point,
           energyWh: Math.round(point.energyWh * demandScale),
