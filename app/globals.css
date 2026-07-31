@@ -86,7 +86,10 @@ code { font-family: "SFMono-Regular", Consolas, monospace; font-size: 10px; over
 .tenant-branch:first-child .side::after { left: 1px; top: -3px; transform: rotate(-135deg); }
 .tenant-branch:last-child .side::after { right: 1px; top: -3px; transform: rotate(45deg); }
 .tenant-branch .side span { position: absolute; top: -18px; left: 40%; white-space: nowrap; background: #fff; padding: 3px; }
-.tenant-card { justify-content: flex-start; min-height: 92px; }
+.tenant-card { width: 100%; justify-content: flex-start; min-height: 92px; color: inherit; text-align: left; cursor: pointer; position: relative; }
+.tenant-card:hover,.tenant-card.selected { border-color: var(--green); box-shadow: 0 10px 32px rgba(13,115,94,.14); transform: translateY(-1px); }
+.tenant-card.selected::after { content: "SELECTED"; position: absolute; right: 10px; top: 9px; color: var(--green); font-size: 7px; font-weight: 900; letter-spacing: .12em; }
+.inspect-hint { margin-left: auto; align-self: end; color: var(--green); font-size: 8px; font-weight: 800; }
 .tenant-marker { display: grid; place-items: center; flex: 0 0 36px; height: 36px; border-radius: 50%; background: #dff3ec; color: var(--green); font-weight: 900; }
 .tenant-row .tenant-branch:last-child .tenant-marker { background: #eeeafd; color: #674fb3; }
 .tenant-card p { margin: 6px 0 0; font-size: 10px; color: var(--muted); }
@@ -103,6 +106,37 @@ code { font-family: "SFMono-Regular", Consolas, monospace; font-size: 10px; over
 input[type="range"] { width: 100%; accent-color: var(--green); cursor: pointer; }
 .time-scale { grid-column: 2; display: flex; justify-content: space-between; margin-top: 4px; }
 .time-scale span { font-size: 8px; }
+
+.tenant-drilldown { display: grid; gap: 14px; padding-top: 8px; }
+.drilldown-heading { display: flex; justify-content: space-between; align-items: end; gap: 24px; }
+.drilldown-heading h3 { margin: 5px 0 0; font: 500 clamp(23px,3vw,34px)/1.08 Georgia,serif; max-width: 680px; }
+.drilldown-assets { display: flex; gap: 8px; }
+.mini-asset { min-width: 170px; background: #fff; border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px; display: flex; gap: 10px; align-items: center; }
+.mini-asset > span:first-child { width: 34px; height: 34px; display: grid; place-items: center; border-radius: 50%; }
+.mini-asset.solar-mini > span { background: var(--deep); color: var(--solar); }
+.mini-asset small { display: block; color: var(--muted); font-size: 7px; letter-spacing: .12em; font-weight: 900; }
+.mini-asset strong { font-size: 16px; }
+.focused-chart-card { background: var(--deep); border-radius: 12px; padding: 18px 24px 14px; overflow: hidden; }
+.focused-chart-card svg { width: 100%; height: auto; max-height: 270px; }
+.focused-chart-legend { display: flex; gap: 18px; margin-bottom: 8px; }
+.focused-chart-legend span { color: #c2cfca; font-size: 9px; display: flex; align-items: center; gap: 7px; }
+.focused-chart-legend i { display: block; width: 20px; height: 3px; }
+.green-consumption-card { background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 22px; display: grid; grid-template-columns: 280px 1fr; gap: 22px; }
+.green-consumption-copy h4 { margin: 5px 0 8px; font-size: 18px; }
+.green-consumption-copy p { margin: 0; color: var(--muted); font-size: 10px; line-height: 1.55; }
+.green-consumption-copy > div { margin-top: 18px; display: grid; }
+.green-consumption-copy > div strong { font: 500 29px Georgia,serif; color: var(--green); }
+.green-consumption-copy > div span { color: var(--muted); font-size: 9px; }
+.allocation-bars { min-height: 150px; display: flex; align-items: end; gap: 3px; padding: 15px 4px 0; border-bottom: 1px solid var(--line); }
+.allocation-bars button { flex: 1; height: 140px; min-width: 5px; padding: 0; border: 0; background: transparent; display: flex; align-items: end; cursor: pointer; }
+.allocation-bars button span { display: block; width: 100%; min-height: 2px; height: calc(var(--bar) * 100%); background: #8ddfc9; border-radius: 3px 3px 0 0; transition: height .2s ease, background .2s ease; }
+.allocation-bars button:hover span,.allocation-bars button.active span { background: var(--green); }
+.allocation-bars button.active { box-shadow: inset 0 -3px var(--solar); }
+.selected-calculation { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(4,1fr); border-top: 1px solid var(--line); }
+.selected-calculation > div { display: grid; gap: 4px; padding: 13px 16px; border-right: 1px solid var(--line); }
+.selected-calculation > div:last-child { border-right: 0; }
+.selected-calculation span { color: var(--muted); font-size: 8px; text-transform: uppercase; letter-spacing: .1em; }
+.selected-calculation strong { font-size: 15px; }
 
 .legend { display: flex; gap: 16px; flex-wrap: wrap; }
 .legend span { font-size: 10px; color: var(--muted); display: flex; gap: 6px; align-items: center; }
@@ -239,6 +273,9 @@ footer { border-top: 1px solid var(--line); padding: 18px clamp(18px,4vw,64px); 
   .interval-ledger { grid-template-columns: 1fr 1fr; }
   .interval-ledger > div:nth-child(2) { border-right: 0; }
   .tenant-row { gap: 50px; }
+  .drilldown-heading { align-items: start; flex-direction: column; }
+  .green-consumption-card { grid-template-columns: 1fr; }
+  .selected-calculation { grid-column: 1; }
 }
 
 @media (max-width: 560px) {
@@ -258,6 +295,9 @@ footer { border-top: 1px solid var(--line); padding: 18px clamp(18px,4vw,64px); 
   .solar-card { min-width: 250px; }
   .tenant-row { grid-template-columns: 1fr; gap: 24px; margin-top: 38px; }
   .tenant-branch .side { display:none; }
+  .drilldown-assets { width: 100%; display: grid; grid-template-columns: 1fr 1fr; }
+  .mini-asset { min-width: 0; }
+  .selected-calculation { grid-template-columns: 1fr 1fr; }
   .grid-flow { position: static; margin-top: 25px; }
   .grid-flow .grid { width: 60px; }
   .time-control { grid-template-columns: 1fr; }

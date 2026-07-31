@@ -12,6 +12,7 @@ import type {
 } from "../lib/contracts";
 import { DEFAULT_RULES, matchScenario, summarise } from "../lib/energy-engine";
 import { buildEvidencePackage, verifyEvidencePackage } from "../lib/evidence";
+import { preparePilotScenario } from "../lib/pilot-scenario";
 import {
   type EvidenceFileIssue,
   type IntervalInclusionResult,
@@ -171,11 +172,15 @@ function SiteTwin({
   intervals,
   index,
   setIndex,
+  selectedTenantId,
+  setSelectedTenantId,
 }: {
   scenario: Scenario;
   intervals: IntervalAllocation[];
   index: number;
   setIndex: (value: number) => void;
+  selectedTenantId: string;
+  setSelectedTenantId: (value: string) => void;
 }) {
   const interval = intervals[index];
   const tenantA = scenario.site.tenants[0];
@@ -183,6 +188,13 @@ function SiteTwin({
   const pointA = tenantA.demand.points[index];
   const pointB = tenantB.demand.points[index];
   const isExporting = interval.exportWh > 0;
+  const selectedTenant = scenario.site.tenants.find((tenant) => tenant.id === selectedTenantId) ?? tenantA;
+  const selectedDemand = selectedTenant.demand.points.map((point) => point.energyWh);
+  const selectedAllocation = intervals.map((point) => point.tenantAllocationsWh[selectedTenant.id]);
+  const generation = intervals.map((point) => point.generationWh);
+  const chartMax = Math.max(...generation, ...selectedDemand);
+  const totalSelectedAllocation = selectedAllocation.reduce((sum, value) => sum + value, 0);
+  const totalSelectedDemand = selectedDemand.reduce((sum, value) => sum + value, 0);
   return (
     <section className="view-stack" aria-labelledby="twin-title">
       <div className="section-heading">
@@ -218,14 +230,20 @@ function SiteTwin({
                 <div className={`flow-line side active tenant-${tenantIndex + 1}`}>
                   <span>{formatEnergy(allocation)}</span>
                 </div>
-                <div className="asset-card tenant-card">
+                <button
+                  type="button"
+                  className={`asset-card tenant-card ${selectedTenant.id === tenant.id ? "selected" : ""}`}
+                  aria-pressed={selectedTenant.id === tenant.id}
+                  onClick={() => setSelectedTenantId(tenant.id)}
+                >
                   <span className="tenant-marker">{tenantIndex ? "B" : "A"}</span>
                   <div>
                     <small>{tenant.label}</small>
                     <strong>{formatPower(point.energyWh, scenario.granularityMinutes)}</strong>
                     <p>{formatEnergy(interval.tenantGridImportWh[tenant.id])} from grid</p>
                   </div>
-                </div>
+                  <span className="inspect-hint">Inspect ↓</span>
+                </button>
               </div>
             );
           })}
@@ -256,6 +274,58 @@ function SiteTwin({
         />
         <div className="time-scale"><span>00:00</span><span>06:00</span><span>12:00</span><span>18:00</span><span>24:00</span></div>
       </div>
+
+      <section className="tenant-drilldown" aria-labelledby="tenant-drilldown-title">
+        <div className="drilldown-heading">
+          <div>
+            <span className="eyebrow">Clicked load · interval calculation</span>
+            <h3 id="tenant-drilldown-title">{selectedTenant.label}: when rooftop electricity served this load</h3>
+          </div>
+          <div className="drilldown-assets" aria-label="Compared assets">
+            <div className="mini-asset solar-mini"><span aria-hidden="true">☀</span><div><small>ROOFTOP OUTPUT</small><strong>{formatPower(interval.generationWh, scenario.granularityMinutes)}</strong></div></div>
+            <div className="mini-asset"><span className="tenant-marker">{selectedTenant.id === tenantA.id ? "A" : "B"}</span><div><small>SELECTED LOAD</small><strong>{formatPower(selectedDemand[index], scenario.granularityMinutes)}</strong></div></div>
+          </div>
+        </div>
+
+        <div className="focused-chart-card">
+          <div className="focused-chart-legend"><span><i className="legend-solar" /> 20 kWp rooftop output</span><span><i className={selectedTenant.id === tenantA.id ? "legend-a" : "legend-b"} /> {selectedTenant.label} demand</span></div>
+          <svg viewBox="0 0 900 260" role="img" aria-label={`Rooftop output and ${selectedTenant.label} demand by hour`}>
+            {[0.25, 0.5, 0.75].map((level) => <line key={level} x1="0" y1={260 * level} x2="900" y2={260 * level} className="gridline" />)}
+            <Sparkline values={generation} max={chartMax} color="#e5ff61" fill="rgba(229,255,97,.08)" label="Rooftop output" />
+            <Sparkline values={selectedDemand} max={chartMax} color={selectedTenant.id === tenantA.id ? "#40d7b5" : "#bba7ff"} label={`${selectedTenant.label} demand`} />
+            <line x1={(index / (intervals.length - 1)) * 900} x2={(index / (intervals.length - 1)) * 900} y1="0" y2="260" className="cursor-line" />
+          </svg>
+          <div className="chart-axis"><span>00:00</span><span>06:00</span><span>12:00</span><span>18:00</span><span>24:00</span></div>
+        </div>
+
+        <div className="green-consumption-card">
+          <div className="green-consumption-copy">
+            <span className="eyebrow">Verified same-interval allocation</span>
+            <h4>Green electricity consumed by {selectedTenant.label}</h4>
+            <p>Each bar is the rooftop electricity allocated to this load in that hour—never more than its measured or modelled demand.</p>
+            <div><strong>{formatEnergy(totalSelectedAllocation)}</strong><span>of {formatEnergy(totalSelectedDemand)} daily demand</span></div>
+          </div>
+          <div className="allocation-bars" role="img" aria-label={`${selectedTenant.label} rooftop electricity consumption by hour`}>
+            {selectedAllocation.map((value, barIndex) => (
+              <button
+                type="button"
+                key={intervals[barIndex].startUtc}
+                className={barIndex === index ? "active" : ""}
+                style={{ "--bar": value / Math.max(1, ...selectedAllocation) } as React.CSSProperties}
+                onClick={() => setIndex(barIndex)}
+                aria-label={`${localTime(intervals[barIndex].startUtc)}: ${formatEnergy(value)} rooftop electricity`}
+                title={`${localTime(intervals[barIndex].startUtc)} · ${formatEnergy(value)}`}
+              ><span /></button>
+            ))}
+          </div>
+          <div className="selected-calculation">
+            <div><span>Hour</span><strong>{localTime(interval.startUtc)}–{localTime(interval.endUtc)}</strong></div>
+            <div><span>Load demand</span><strong>{formatEnergy(selectedDemand[index])}</strong></div>
+            <div><span>Rooftop consumed</span><strong>{formatEnergy(selectedAllocation[index])}</strong></div>
+            <div><span>Grid balance</span><strong>{formatEnergy(interval.tenantGridImportWh[selectedTenant.id])}</strong></div>
+          </div>
+        </div>
+      </section>
     </section>
   );
 }
@@ -567,6 +637,7 @@ export function GreenProofApp() {
   const [view, setView] = useState<View>(initialView);
   const [timeIndex, setTimeIndex] = useState(initialTimeIndex);
   const [ruleId, setRuleId] = useState<AllocationRuleId>("pro_rata_demand_v1");
+  const [selectedTenantId, setSelectedTenantId] = useState("tenant-a");
   const [evidenceSession, setEvidenceSession] = useState<EvidenceSession | null>(null);
   const [evidenceOperation, setEvidenceOperation] = useState<EvidenceOperation>("idle");
   const [evidenceFileError, setEvidenceFileError] = useState<EvidenceFileIssue | null>(null);
@@ -588,7 +659,7 @@ export function GreenProofApp() {
         if (!response.ok) throw new Error("The selected scenario is unavailable or damaged");
         return response.json() as Promise<Scenario>;
       })
-      .then(setScenario)
+      .then((data) => setScenario(preparePilotScenario(data)))
       .catch((error: Error) => setLoadError(error.message));
   }, []);
 
@@ -616,7 +687,7 @@ export function GreenProofApp() {
         return response.json() as Promise<Scenario>;
       })
       .then((data) => {
-        setScenario(data);
+        setScenario(preparePilotScenario(data));
         setTimeIndex(Math.min(12, data.site.generation.points.length - 1));
         setEvidenceSession(null);
         setEvidenceFileError(null);
@@ -806,7 +877,7 @@ export function GreenProofApp() {
           </label>
         </div>
         <div className="rule-explainer"><span>METHOD</span><p>{RULE_LABELS[ruleId].note}</p><code>{ruleId}</code></div>
-        {view === "twin" ? <SiteTwin scenario={scenario} intervals={intervals} index={safeTimeIndex} setIndex={(value) => { setTimeIndex(value); syncUrl({ time: value }); }} /> : null}
+        {view === "twin" ? <SiteTwin scenario={scenario} intervals={intervals} index={safeTimeIndex} setIndex={(value) => { setTimeIndex(value); syncUrl({ time: value }); }} selectedTenantId={selectedTenantId} setSelectedTenantId={setSelectedTenantId} /> : null}
         {view === "matching" ? <DailyMatching scenario={scenario} intervals={intervals} index={safeTimeIndex} setIndex={(value) => { setTimeIndex(value); syncUrl({ time: value }); }} /> : null}
         {view === "summary" ? <PeriodSummary scenario={scenario} intervals={intervals} /> : null}
         {view === "evidence" ? (
