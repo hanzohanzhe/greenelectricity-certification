@@ -1,0 +1,20 @@
+[
+  {
+    "id": "cambridge-campus-real",
+    "label": "Cambridge campus archive \u00b7 summer",
+    "description": "Two anonymous measured-demand buildings on one shared modelled Cambridge rooftop.",
+    "path": "/data/scenarios/cambridge-campus-real.json"
+  },
+  {
+    "id": "cambridge-weather-driven",
+    "label": "Weather-driven pilot fallback",
+    "description": "Public UK profile shapes scaled to pilot-sized annual demand, paired with Cambridge weather-modelled PV.",
+    "path": "/data/scenarios/cambridge-weather-driven.json"
+  },
+  {
+    "id": "uk-system-context",
+    "label": "Campus + GB system context",
+    "description": "The campus twin is shown alongside a separate NESO national-demand trace; national data is never rescaled into building demand.",
+    "path": "/data/scenarios/uk-system-context.json"
+  }
+]

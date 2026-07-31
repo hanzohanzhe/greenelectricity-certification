@@ -1,0 +1,752 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "cambridge-weather-driven",
+  "label": "Weather-driven pilot fallback",
+  "description": "Public UK profile shapes scaled to pilot-sized annual demand, paired with Cambridge weather-modelled PV.",
+  "representativeDay": "2022-06-15",
+  "granularityMinutes": 60,
+  "alignment": "aligned_typical_day",
+  "site": {
+    "id": "cambridge-rooftop-demo",
+    "label": "Cambridge shared-roof pilot",
+    "locationLabel": "Cambridge, UK (approximate)",
+    "generation": {
+      "id": "shared-rooftop-pv",
+      "label": "60 kWp shared rooftop PV",
+      "capacityKwp": 60,
+      "points": [
+        {
+          "startUtc": "2022-06-15T00:00:00Z",
+          "endUtc": "2022-06-15T01:00:00Z",
+          "energyWh": 0,
+          "provenance": "modelled",
+          "qualityFlags": [],
+          "sourceRecordId": "renewables-ninja-cambridge:2022-06-15T00"
+        },
+        {
+          "startUtc": "2022-06-15T01:00:00Z",
+          "endUtc": "2022-06-15T02:00:00Z",
+          "energyWh": 0,
+          "provenance": "modelled",
+          "qualityFlags": [],
+          "sourceRecordId": "renewables-ninja-cambridge:2022-06-15T01"
+        },
+        {
+          "startUtc": "2022-06-15T02:00:00Z",
+          "endUtc": "2022-06-15T03:00:00Z",
+          "energyWh": 0,
+          "provenance": "modelled",
+          "qualityFlags": [],
+          "sourceRecordId": "renewables-ninja-cambridge:2022-06-15T02"
+        },
+        {
+          "startUtc": "2022-06-15T03:00:00Z",
+          "endUtc": "2022-06-15T04:00:00Z",
+          "energyWh": 0,
+          "provenance": "modelled",
+          "qualityFlags": [],
+          "sourceRecordId": "renewables-ninja-cambridge:2022-06-15T03"
+        },
+        {
+          "startUtc": "2022-06-15T04:00:00Z",
+          "endUtc": "2022-06-15T05:00:00Z",
+          "energyWh": 1260000,
+          "provenance": "modelled",
+          "qualityFlags": [],
+          "sourceRecordId": "renewables-ninja-cambridge:2022-06-15T04"
+        },
+        {
+          "startUtc": "2022-06-15T05:00:00Z",
+          "endUtc": "2022-06-15T06:00:00Z",
+          "energyWh": 2820000,
+          "provenance": "modelled",
+          "qualityFlags": [],
+          "sourceRecordId": "renewables-ninja-cambridge:2022-06-15T05"
+        },
+        {
+          "startUtc": "2022-06-15T06:00:00Z",
+          "endUtc": "2022-06-15T07:00:00Z",
+          "energyWh": 12360000,
+          "provenance": "modelled",
+          "qualityFlags": [],
+          "sourceRecordId": "renewables-ninja-cambridge:2022-06-15T06"
+        },
+        {
+          "startUtc": "2022-06-15T07:00:00Z",
+          "endUtc": "2022-06-15T08:00:00Z",
+          "energyWh": 22440000,
+          "provenance": "modelled",
+          "qualityFlags": [],
+          "sourceRecordId": "renewables-ninja-cambridge:2022-06-15T07"
+        },
+        {
+          "startUtc": "2022-06-15T08:00:00Z",
+          "endUtc": "2022-06-15T09:00:00Z",
+          "energyWh": 31440000,
+          "provenance": "modelled",
+          "qualityFlags": [],
+          "sourceRecordId": "renewables-ninja-cambridge:2022-06-15T08"
+        },
+        {
+          "startUtc": "2022-06-15T09:00:00Z",
+          "endUtc": "2022-06-15T10:00:00Z",
+          "energyWh": 39180000,
+          "provenance": "modelled",
+          "qualityFlags": [],
+          "sourceRecordId": "renewables-ninja-cambridge:2022-06-15T09"
+        },
+        {
+          "startUtc": "2022-06-15T10:00:00Z",
+          "endUtc": "2022-06-15T11:00:00Z",
+          "energyWh": 44460000,
+          "provenance": "modelled",
+          "qualityFlags": [],
+          "sourceRecordId": "renewables-ninja-cambridge:2022-06-15T10"
+        },
+        {
+          "startUtc": "2022-06-15T11:00:00Z",
+          "endUtc": "2022-06-15T12:00:00Z",
+          "energyWh": 46440000,
+          "provenance": "modelled",
+          "qualityFlags": [],
+          "sourceRecordId": "renewables-ninja-cambridge:2022-06-15T11"
+        },
+        {
+          "startUtc": "2022-06-15T12:00:00Z",
+          "endUtc": "2022-06-15T13:00:00Z",
+          "energyWh": 44940000,
+          "provenance": "modelled",
+          "qualityFlags": [],
+          "sourceRecordId": "renewables-ninja-cambridge:2022-06-15T12"
+        },
+        {
+          "startUtc": "2022-06-15T13:00:00Z",
+          "endUtc": "2022-06-15T14:00:00Z",
+          "energyWh": 39900000,
+          "provenance": "modelled",
+          "qualityFlags": [],
+          "sourceRecordId": "renewables-ninja-cambridge:2022-06-15T13"
+        },
+        {
+          "startUtc": "2022-06-15T14:00:00Z",
+          "endUtc": "2022-06-15T15:00:00Z",
+          "energyWh": 29580000,
+          "provenance": "modelled",
+          "qualityFlags": [],
+          "sourceRecordId": "renewables-ninja-cambridge:2022-06-15T14"
+        },
+        {
+          "startUtc": "2022-06-15T15:00:00Z",
+          "endUtc": "2022-06-15T16:00:00Z",
+          "energyWh": 22620000,
+          "provenance": "modelled",
+          "qualityFlags": [],
+          "sourceRecordId": "renewables-ninja-cambridge:2022-06-15T15"
+        },
+        {
+          "startUtc": "2022-06-15T16:00:00Z",
+          "endUtc": "2022-06-15T17:00:00Z",
+          "energyWh": 15840000,
+          "provenance": "modelled",
+          "qualityFlags": [],
+          "sourceRecordId": "renewables-ninja-cambridge:2022-06-15T16"
+        },
+        {
+          "startUtc": "2022-06-15T17:00:00Z",
+          "endUtc": "2022-06-15T18:00:00Z",
+          "energyWh": 9180000,
+          "provenance": "modelled",
+          "qualityFlags": [],
+          "sourceRecordId": "renewables-ninja-cambridge:2022-06-15T17"
+        },
+        {
+          "startUtc": "2022-06-15T18:00:00Z",
+          "endUtc": "2022-06-15T19:00:00Z",
+          "energyWh": 3960000,
+          "provenance": "modelled",
+          "qualityFlags": [],
+          "sourceRecordId": "renewables-ninja-cambridge:2022-06-15T18"
+        },
+        {
+          "startUtc": "2022-06-15T19:00:00Z",
+          "endUtc": "2022-06-15T20:00:00Z",
+          "energyWh": 1140000,
+          "provenance": "modelled",
+          "qualityFlags": [],
+          "sourceRecordId": "renewables-ninja-cambridge:2022-06-15T19"
+        },
+        {
+          "startUtc": "2022-06-15T20:00:00Z",
+          "endUtc": "2022-06-15T21:00:00Z",
+          "energyWh": 0,
+          "provenance": "modelled",
+          "qualityFlags": [],
+          "sourceRecordId": "renewables-ninja-cambridge:2022-06-15T20"
+        },
+        {
+          "startUtc": "2022-06-15T21:00:00Z",
+          "endUtc": "2022-06-15T22:00:00Z",
+          "energyWh": 0,
+          "provenance": "modelled",
+          "qualityFlags": [],
+          "sourceRecordId": "renewables-ninja-cambridge:2022-06-15T21"
+        },
+        {
+          "startUtc": "2022-06-15T22:00:00Z",
+          "endUtc": "2022-06-15T23:00:00Z",
+          "energyWh": 0,
+          "provenance": "modelled",
+          "qualityFlags": [],
+          "sourceRecordId": "renewables-ninja-cambridge:2022-06-15T22"
+        },
+        {
+          "startUtc": "2022-06-15T23:00:00Z",
+          "endUtc": "2022-06-16T00:00:00Z",
+          "energyWh": 0,
+          "provenance": "modelled",
+          "qualityFlags": [],
+          "sourceRecordId": "renewables-ninja-cambridge:2022-06-15T23"
+        }
+      ]
+    },
+    "tenants": [
+      {
+        "id": "tenant-a",
+        "label": "Tenant A · daytime-led",
+        "description": "An anonymous university building with a pronounced occupied-hours load shape.",
+        "demand": {
+          "id": "tenant-a-demand",
+          "label": "Tenant A demand",
+          "points": [
+            {
+              "startUtc": "2022-06-15T00:00:00Z",
+              "endUtc": "2022-06-15T01:00:00Z",
+              "energyWh": 2752,
+              "provenance": "profile_scaled",
+              "qualityFlags": [
+                "illustrative_profile_not_metered"
+              ],
+              "sourceRecordId": "anonymous-campus-a:2022-06-15T00"
+            },
+            {
+              "startUtc": "2022-06-15T01:00:00Z",
+              "endUtc": "2022-06-15T02:00:00Z",
+              "energyWh": 2752,
+              "provenance": "profile_scaled",
+              "qualityFlags": [
+                "illustrative_profile_not_metered"
+              ],
+              "sourceRecordId": "anonymous-campus-a:2022-06-15T01"
+            },
+            {
+              "startUtc": "2022-06-15T02:00:00Z",
+              "endUtc": "2022-06-15T03:00:00Z",
+              "energyWh": 2752,
+              "provenance": "profile_scaled",
+              "qualityFlags": [
+                "illustrative_profile_not_metered"
+              ],
+              "sourceRecordId": "anonymous-campus-a:2022-06-15T02"
+            },
+            {
+              "startUtc": "2022-06-15T03:00:00Z",
+              "endUtc": "2022-06-15T04:00:00Z",
+              "energyWh": 2752,
+              "provenance": "profile_scaled",
+              "qualityFlags": [
+                "illustrative_profile_not_metered"
+              ],
+              "sourceRecordId": "anonymous-campus-a:2022-06-15T03"
+            },
+            {
+              "startUtc": "2022-06-15T04:00:00Z",
+              "endUtc": "2022-06-15T05:00:00Z",
+              "energyWh": 2752,
+              "provenance": "profile_scaled",
+              "qualityFlags": [
+                "illustrative_profile_not_metered"
+              ],
+              "sourceRecordId": "anonymous-campus-a:2022-06-15T04"
+            },
+            {
+              "startUtc": "2022-06-15T05:00:00Z",
+              "endUtc": "2022-06-15T06:00:00Z",
+              "energyWh": 2752,
+              "provenance": "profile_scaled",
+              "qualityFlags": [
+                "illustrative_profile_not_metered"
+              ],
+              "sourceRecordId": "anonymous-campus-a:2022-06-15T05"
+            },
+            {
+              "startUtc": "2022-06-15T06:00:00Z",
+              "endUtc": "2022-06-15T07:00:00Z",
+              "energyWh": 2752,
+              "provenance": "profile_scaled",
+              "qualityFlags": [
+                "illustrative_profile_not_metered"
+              ],
+              "sourceRecordId": "anonymous-campus-a:2022-06-15T06"
+            },
+            {
+              "startUtc": "2022-06-15T07:00:00Z",
+              "endUtc": "2022-06-15T08:00:00Z",
+              "energyWh": 4987,
+              "provenance": "profile_scaled",
+              "qualityFlags": [
+                "illustrative_profile_not_metered"
+              ],
+              "sourceRecordId": "anonymous-campus-a:2022-06-15T07"
+            },
+            {
+              "startUtc": "2022-06-15T08:00:00Z",
+              "endUtc": "2022-06-15T09:00:00Z",
+              "energyWh": 7739,
+              "provenance": "profile_scaled",
+              "qualityFlags": [
+                "illustrative_profile_not_metered"
+              ],
+              "sourceRecordId": "anonymous-campus-a:2022-06-15T08"
+            },
+            {
+              "startUtc": "2022-06-15T09:00:00Z",
+              "endUtc": "2022-06-15T10:00:00Z",
+              "energyWh": 10318,
+              "provenance": "profile_scaled",
+              "qualityFlags": [
+                "illustrative_profile_not_metered"
+              ],
+              "sourceRecordId": "anonymous-campus-a:2022-06-15T09"
+            },
+            {
+              "startUtc": "2022-06-15T10:00:00Z",
+              "endUtc": "2022-06-15T11:00:00Z",
+              "energyWh": 12210,
+              "provenance": "profile_scaled",
+              "qualityFlags": [
+                "illustrative_profile_not_metered"
+              ],
+              "sourceRecordId": "anonymous-campus-a:2022-06-15T10"
+            },
+            {
+              "startUtc": "2022-06-15T11:00:00Z",
+              "endUtc": "2022-06-15T12:00:00Z",
+              "energyWh": 12898,
+              "provenance": "profile_scaled",
+              "qualityFlags": [
+                "illustrative_profile_not_metered"
+              ],
+              "sourceRecordId": "anonymous-campus-a:2022-06-15T11"
+            },
+            {
+              "startUtc": "2022-06-15T12:00:00Z",
+              "endUtc": "2022-06-15T13:00:00Z",
+              "energyWh": 13070,
+              "provenance": "profile_scaled",
+              "qualityFlags": [
+                "illustrative_profile_not_metered"
+              ],
+              "sourceRecordId": "anonymous-campus-a:2022-06-15T12"
+            },
+            {
+              "startUtc": "2022-06-15T13:00:00Z",
+              "endUtc": "2022-06-15T14:00:00Z",
+              "energyWh": 12726,
+              "provenance": "profile_scaled",
+              "qualityFlags": [
+                "illustrative_profile_not_metered"
+              ],
+              "sourceRecordId": "anonymous-campus-a:2022-06-15T13"
+            },
+            {
+              "startUtc": "2022-06-15T14:00:00Z",
+              "endUtc": "2022-06-15T15:00:00Z",
+              "energyWh": 12210,
+              "provenance": "profile_scaled",
+              "qualityFlags": [
+                "illustrative_profile_not_metered"
+              ],
+              "sourceRecordId": "anonymous-campus-a:2022-06-15T14"
+            },
+            {
+              "startUtc": "2022-06-15T15:00:00Z",
+              "endUtc": "2022-06-15T16:00:00Z",
+              "energyWh": 11178,
+              "provenance": "profile_scaled",
+              "qualityFlags": [
+                "illustrative_profile_not_metered"
+              ],
+              "sourceRecordId": "anonymous-campus-a:2022-06-15T15"
+            },
+            {
+              "startUtc": "2022-06-15T16:00:00Z",
+              "endUtc": "2022-06-15T17:00:00Z",
+              "energyWh": 9459,
+              "provenance": "profile_scaled",
+              "qualityFlags": [
+                "illustrative_profile_not_metered"
+              ],
+              "sourceRecordId": "anonymous-campus-a:2022-06-15T16"
+            },
+            {
+              "startUtc": "2022-06-15T17:00:00Z",
+              "endUtc": "2022-06-15T18:00:00Z",
+              "energyWh": 7051,
+              "provenance": "profile_scaled",
+              "qualityFlags": [
+                "illustrative_profile_not_metered"
+              ],
+              "sourceRecordId": "anonymous-campus-a:2022-06-15T17"
+            },
+            {
+              "startUtc": "2022-06-15T18:00:00Z",
+              "endUtc": "2022-06-15T19:00:00Z",
+              "energyWh": 4299,
+              "provenance": "profile_scaled",
+              "qualityFlags": [
+                "illustrative_profile_not_metered"
+              ],
+              "sourceRecordId": "anonymous-campus-a:2022-06-15T18"
+            },
+            {
+              "startUtc": "2022-06-15T19:00:00Z",
+              "endUtc": "2022-06-15T20:00:00Z",
+              "energyWh": 4299,
+              "provenance": "profile_scaled",
+              "qualityFlags": [
+                "illustrative_profile_not_metered"
+              ],
+              "sourceRecordId": "anonymous-campus-a:2022-06-15T19"
+            },
+            {
+              "startUtc": "2022-06-15T20:00:00Z",
+              "endUtc": "2022-06-15T21:00:00Z",
+              "energyWh": 4299,
+              "provenance": "profile_scaled",
+              "qualityFlags": [
+                "illustrative_profile_not_metered"
+              ],
+              "sourceRecordId": "anonymous-campus-a:2022-06-15T20"
+            },
+            {
+              "startUtc": "2022-06-15T21:00:00Z",
+              "endUtc": "2022-06-15T22:00:00Z",
+              "energyWh": 4299,
+              "provenance": "profile_scaled",
+              "qualityFlags": [
+                "illustrative_profile_not_metered"
+              ],
+              "sourceRecordId": "anonymous-campus-a:2022-06-15T21"
+            },
+            {
+              "startUtc": "2022-06-15T22:00:00Z",
+              "endUtc": "2022-06-15T23:00:00Z",
+              "energyWh": 4299,
+              "provenance": "profile_scaled",
+              "qualityFlags": [
+                "illustrative_profile_not_metered"
+              ],
+              "sourceRecordId": "anonymous-campus-a:2022-06-15T22"
+            },
+            {
+              "startUtc": "2022-06-15T23:00:00Z",
+              "endUtc": "2022-06-16T00:00:00Z",
+              "energyWh": 4299,
+              "provenance": "profile_scaled",
+              "qualityFlags": [
+                "illustrative_profile_not_metered"
+              ],
+              "sourceRecordId": "anonymous-campus-a:2022-06-15T23"
+            }
+          ]
+        }
+      },
+      {
+        "id": "tenant-b",
+        "label": "Tenant B · steady base",
+        "description": "An anonymous university building with a comparatively stable base load.",
+        "demand": {
+          "id": "tenant-b-demand",
+          "label": "Tenant B demand",
+          "points": [
+            {
+              "startUtc": "2022-06-15T00:00:00Z",
+              "endUtc": "2022-06-15T01:00:00Z",
+              "energyWh": 9492,
+              "provenance": "profile_scaled",
+              "qualityFlags": [
+                "illustrative_profile_not_metered"
+              ],
+              "sourceRecordId": "anonymous-campus-b:2022-06-15T00"
+            },
+            {
+              "startUtc": "2022-06-15T01:00:00Z",
+              "endUtc": "2022-06-15T02:00:00Z",
+              "energyWh": 9492,
+              "provenance": "profile_scaled",
+              "qualityFlags": [
+                "illustrative_profile_not_metered"
+              ],
+              "sourceRecordId": "anonymous-campus-b:2022-06-15T01"
+            },
+            {
+              "startUtc": "2022-06-15T02:00:00Z",
+              "endUtc": "2022-06-15T03:00:00Z",
+              "energyWh": 9492,
+              "provenance": "profile_scaled",
+              "qualityFlags": [
+                "illustrative_profile_not_metered"
+              ],
+              "sourceRecordId": "anonymous-campus-b:2022-06-15T02"
+            },
+            {
+              "startUtc": "2022-06-15T03:00:00Z",
+              "endUtc": "2022-06-15T04:00:00Z",
+              "energyWh": 9492,
+              "provenance": "profile_scaled",
+              "qualityFlags": [
+                "illustrative_profile_not_metered"
+              ],
+              "sourceRecordId": "anonymous-campus-b:2022-06-15T03"
+            },
+            {
+              "startUtc": "2022-06-15T04:00:00Z",
+              "endUtc": "2022-06-15T05:00:00Z",
+              "energyWh": 9492,
+              "provenance": "profile_scaled",
+              "qualityFlags": [
+                "illustrative_profile_not_metered"
+              ],
+              "sourceRecordId": "anonymous-campus-b:2022-06-15T04"
+            },
+            {
+              "startUtc": "2022-06-15T05:00:00Z",
+              "endUtc": "2022-06-15T06:00:00Z",
+              "energyWh": 9492,
+              "provenance": "profile_scaled",
+              "qualityFlags": [
+                "illustrative_profile_not_metered"
+              ],
+              "sourceRecordId": "anonymous-campus-b:2022-06-15T05"
+            },
+            {
+              "startUtc": "2022-06-15T06:00:00Z",
+              "endUtc": "2022-06-15T07:00:00Z",
+              "energyWh": 9492,
+              "provenance": "profile_scaled",
+              "qualityFlags": [
+                "illustrative_profile_not_metered"
+              ],
+              "sourceRecordId": "anonymous-campus-b:2022-06-15T06"
+            },
+            {
+              "startUtc": "2022-06-15T07:00:00Z",
+              "endUtc": "2022-06-15T08:00:00Z",
+              "energyWh": 11337,
+              "provenance": "profile_scaled",
+              "qualityFlags": [
+                "illustrative_profile_not_metered"
+              ],
+              "sourceRecordId": "anonymous-campus-b:2022-06-15T07"
+            },
+            {
+              "startUtc": "2022-06-15T08:00:00Z",
+              "endUtc": "2022-06-15T09:00:00Z",
+              "energyWh": 9492,
+              "provenance": "profile_scaled",
+              "qualityFlags": [
+                "illustrative_profile_not_metered"
+              ],
+              "sourceRecordId": "anonymous-campus-b:2022-06-15T08"
+            },
+            {
+              "startUtc": "2022-06-15T09:00:00Z",
+              "endUtc": "2022-06-15T10:00:00Z",
+              "energyWh": 8173,
+              "provenance": "profile_scaled",
+              "qualityFlags": [
+                "illustrative_profile_not_metered"
+              ],
+              "sourceRecordId": "anonymous-campus-b:2022-06-15T09"
+            },
+            {
+              "startUtc": "2022-06-15T10:00:00Z",
+              "endUtc": "2022-06-15T11:00:00Z",
+              "energyWh": 7646,
+              "provenance": "profile_scaled",
+              "qualityFlags": [
+                "illustrative_profile_not_metered"
+              ],
+              "sourceRecordId": "anonymous-campus-b:2022-06-15T10"
+            },
+            {
+              "startUtc": "2022-06-15T11:00:00Z",
+              "endUtc": "2022-06-15T12:00:00Z",
+              "energyWh": 7250,
+              "provenance": "profile_scaled",
+              "qualityFlags": [
+                "illustrative_profile_not_metered"
+              ],
+              "sourceRecordId": "anonymous-campus-b:2022-06-15T11"
+            },
+            {
+              "startUtc": "2022-06-15T12:00:00Z",
+              "endUtc": "2022-06-15T13:00:00Z",
+              "energyWh": 6855,
+              "provenance": "profile_scaled",
+              "qualityFlags": [
+                "illustrative_profile_not_metered"
+              ],
+              "sourceRecordId": "anonymous-campus-b:2022-06-15T12"
+            },
+            {
+              "startUtc": "2022-06-15T13:00:00Z",
+              "endUtc": "2022-06-15T14:00:00Z",
+              "energyWh": 7119,
+              "provenance": "profile_scaled",
+              "qualityFlags": [
+                "illustrative_profile_not_metered"
+              ],
+              "sourceRecordId": "anonymous-campus-b:2022-06-15T13"
+            },
+            {
+              "startUtc": "2022-06-15T14:00:00Z",
+              "endUtc": "2022-06-15T15:00:00Z",
+              "energyWh": 7646,
+              "provenance": "profile_scaled",
+              "qualityFlags": [
+                "illustrative_profile_not_metered"
+              ],
+              "sourceRecordId": "anonymous-campus-b:2022-06-15T14"
+            },
+            {
+              "startUtc": "2022-06-15T15:00:00Z",
+              "endUtc": "2022-06-15T16:00:00Z",
+              "energyWh": 8701,
+              "provenance": "profile_scaled",
+              "qualityFlags": [
+                "illustrative_profile_not_metered"
+              ],
+              "sourceRecordId": "anonymous-campus-b:2022-06-15T15"
+            },
+            {
+              "startUtc": "2022-06-15T16:00:00Z",
+              "endUtc": "2022-06-15T17:00:00Z",
+              "energyWh": 11073,
+              "provenance": "profile_scaled",
+              "qualityFlags": [
+                "illustrative_profile_not_metered"
+              ],
+              "sourceRecordId": "anonymous-campus-b:2022-06-15T16"
+            },
+            {
+              "startUtc": "2022-06-15T17:00:00Z",
+              "endUtc": "2022-06-15T18:00:00Z",
+              "energyWh": 16478,
+              "provenance": "profile_scaled",
+              "qualityFlags": [
+                "illustrative_profile_not_metered"
+              ],
+              "sourceRecordId": "anonymous-campus-b:2022-06-15T17"
+            },
+            {
+              "startUtc": "2022-06-15T18:00:00Z",
+              "endUtc": "2022-06-15T19:00:00Z",
+              "energyWh": 19510,
+              "provenance": "profile_scaled",
+              "qualityFlags": [
+                "illustrative_profile_not_metered"
+              ],
+              "sourceRecordId": "anonymous-campus-b:2022-06-15T18"
+            },
+            {
+              "startUtc": "2022-06-15T19:00:00Z",
+              "endUtc": "2022-06-15T20:00:00Z",
+              "energyWh": 17929,
+              "provenance": "profile_scaled",
+              "qualityFlags": [
+                "illustrative_profile_not_metered"
+              ],
+              "sourceRecordId": "anonymous-campus-b:2022-06-15T19"
+            },
+            {
+              "startUtc": "2022-06-15T20:00:00Z",
+              "endUtc": "2022-06-15T21:00:00Z",
+              "energyWh": 14237,
+              "provenance": "profile_scaled",
+              "qualityFlags": [
+                "illustrative_profile_not_metered"
+              ],
+              "sourceRecordId": "anonymous-campus-b:2022-06-15T20"
+            },
+            {
+              "startUtc": "2022-06-15T21:00:00Z",
+              "endUtc": "2022-06-15T22:00:00Z",
+              "energyWh": 11864,
+              "provenance": "profile_scaled",
+              "qualityFlags": [
+                "illustrative_profile_not_metered"
+              ],
+              "sourceRecordId": "anonymous-campus-b:2022-06-15T21"
+            },
+            {
+              "startUtc": "2022-06-15T22:00:00Z",
+              "endUtc": "2022-06-15T23:00:00Z",
+              "energyWh": 10546,
+              "provenance": "profile_scaled",
+              "qualityFlags": [
+                "illustrative_profile_not_metered"
+              ],
+              "sourceRecordId": "anonymous-campus-b:2022-06-15T22"
+            },
+            {
+              "startUtc": "2022-06-15T23:00:00Z",
+              "endUtc": "2022-06-16T00:00:00Z",
+              "energyWh": 9755,
+              "provenance": "profile_scaled",
+              "qualityFlags": [
+                "illustrative_profile_not_metered"
+              ],
+              "sourceRecordId": "anonymous-campus-b:2022-06-15T23"
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "sources": [
+    {
+      "id": "elexon-profile-semantics",
+      "name": "Elexon standard load-profile semantics",
+      "url": "https://www.elexon.co.uk/bsc/settlement/profiling/",
+      "version": "MVP documented approximation",
+      "license": "Reference only; no raw coefficient redistribution",
+      "retrievedAt": "2026-07-31T00:00:00Z",
+      "sha256": "4ae6e98703e466d520700a9acb1d58be2e64c97ac504f113581d9741e2504dd8",
+      "provenance": "profile_scaled",
+      "limitations": [
+        "Illustrative class-informed profile, not a dated coefficient set."
+      ]
+    },
+    {
+      "id": "renewables-ninja-cambridge",
+      "name": "Renewables.ninja Cambridge solar model (distributed in Cambridge archive)",
+      "url": "https://www.renewables.ninja/",
+      "version": "MERRA-2 / 2022 snapshot",
+      "license": "Source dataset terms; redistributed here as a derived 24-point excerpt under archive context",
+      "retrievedAt": "2026-07-31T00:00:00Z",
+      "sha256": "51db9377b1c2d0867d486443572e3b3b54419076e86f890cbaf1f577173c2f96",
+      "provenance": "modelled",
+      "limitations": [
+        "Weather reanalysis and technology model; not measured generation."
+      ]
+    }
+  ],
+  "context": null,
+  "qualitySummary": [
+    "Cambridge archive electricity was aggregated from raw half-hourly meter readings to hourly values.",
+    "The archive replaces missing or invalid readings with zero; suspicious zeros remain quality-limited.",
+    "PV is a Cambridge weather-reanalysis model, not a live or measured rooftop meter.",
+    "Building identities remain anonymous; exact addresses are neither used nor exposed."
+  ]
+}

@@ -1,0 +1,62 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://greenproof.example/schema/scenario-1.0.0.json",
+  "title": "GreenProof Scenario",
+  "type": "object",
+  "required": ["schemaVersion", "id", "granularityMinutes", "alignment", "site", "sources"],
+  "properties": {
+    "schemaVersion": { "const": "1.0.0" },
+    "id": { "type": "string", "minLength": 1 },
+    "granularityMinutes": { "type": "integer", "minimum": 1 },
+    "alignment": { "enum": ["same_day", "aligned_typical_day"] },
+    "site": {
+      "type": "object",
+      "required": ["generation", "tenants"],
+      "properties": {
+        "generation": { "$ref": "#/$defs/series" },
+        "tenants": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 2,
+          "items": {
+            "type": "object",
+            "required": ["id", "demand"],
+            "properties": {
+              "id": { "type": "string" },
+              "demand": { "$ref": "#/$defs/series" }
+            }
+          }
+        }
+      }
+    },
+    "sources": { "type": "array" }
+  },
+  "$defs": {
+    "series": {
+      "type": "object",
+      "required": ["id", "points"],
+      "properties": {
+        "id": { "type": "string" },
+        "points": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/point" }
+        }
+      }
+    },
+    "point": {
+      "type": "object",
+      "required": ["startUtc", "endUtc", "energyWh", "provenance", "qualityFlags", "sourceRecordId"],
+      "properties": {
+        "startUtc": { "type": "string", "format": "date-time" },
+        "endUtc": { "type": "string", "format": "date-time" },
+        "energyWh": { "type": "integer", "minimum": 0 },
+        "provenance": {
+          "enum": ["measured", "modelled", "profile_scaled", "aggregated", "interpolated", "extrapolated", "user_provided"]
+        },
+        "qualityFlags": { "type": "array", "items": { "type": "string" } },
+        "sourceRecordId": { "type": "string", "minLength": 1 }
+      }
+    }
+  }
+}

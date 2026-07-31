@@ -1,0 +1,701 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "uk-system-context",
+  "label": "Campus + GB system context",
+  "description": "The campus twin is shown alongside a separate NESO national-demand trace; national data is never rescaled into building demand.",
+  "representativeDay": "2022-01-12",
+  "granularityMinutes": 60,
+  "alignment": "aligned_typical_day",
+  "site": {
+    "id": "cambridge-rooftop-demo",
+    "label": "Cambridge shared-roof pilot",
+    "locationLabel": "Cambridge, UK (approximate)",
+    "generation": {
+      "id": "shared-rooftop-pv",
+      "label": "60 kWp shared rooftop PV",
+      "capacityKwp": 60,
+      "points": [
+        {
+          "startUtc": "2022-01-12T00:00:00Z",
+          "endUtc": "2022-01-12T01:00:00Z",
+          "energyWh": 0,
+          "provenance": "modelled",
+          "qualityFlags": [],
+          "sourceRecordId": "renewables-ninja-cambridge:2022-01-12T00"
+        },
+        {
+          "startUtc": "2022-01-12T01:00:00Z",
+          "endUtc": "2022-01-12T02:00:00Z",
+          "energyWh": 0,
+          "provenance": "modelled",
+          "qualityFlags": [],
+          "sourceRecordId": "renewables-ninja-cambridge:2022-01-12T01"
+        },
+        {
+          "startUtc": "2022-01-12T02:00:00Z",
+          "endUtc": "2022-01-12T03:00:00Z",
+          "energyWh": 0,
+          "provenance": "modelled",
+          "qualityFlags": [],
+          "sourceRecordId": "renewables-ninja-cambridge:2022-01-12T02"
+        },
+        {
+          "startUtc": "2022-01-12T03:00:00Z",
+          "endUtc": "2022-01-12T04:00:00Z",
+          "energyWh": 0,
+          "provenance": "modelled",
+          "qualityFlags": [],
+          "sourceRecordId": "renewables-ninja-cambridge:2022-01-12T03"
+        },
+        {
+          "startUtc": "2022-01-12T04:00:00Z",
+          "endUtc": "2022-01-12T05:00:00Z",
+          "energyWh": 0,
+          "provenance": "modelled",
+          "qualityFlags": [],
+          "sourceRecordId": "renewables-ninja-cambridge:2022-01-12T04"
+        },
+        {
+          "startUtc": "2022-01-12T05:00:00Z",
+          "endUtc": "2022-01-12T06:00:00Z",
+          "energyWh": 0,
+          "provenance": "modelled",
+          "qualityFlags": [],
+          "sourceRecordId": "renewables-ninja-cambridge:2022-01-12T05"
+        },
+        {
+          "startUtc": "2022-01-12T06:00:00Z",
+          "endUtc": "2022-01-12T07:00:00Z",
+          "energyWh": 0,
+          "provenance": "modelled",
+          "qualityFlags": [],
+          "sourceRecordId": "renewables-ninja-cambridge:2022-01-12T06"
+        },
+        {
+          "startUtc": "2022-01-12T07:00:00Z",
+          "endUtc": "2022-01-12T08:00:00Z",
+          "energyWh": 0,
+          "provenance": "modelled",
+          "qualityFlags": [],
+          "sourceRecordId": "renewables-ninja-cambridge:2022-01-12T07"
+        },
+        {
+          "startUtc": "2022-01-12T08:00:00Z",
+          "endUtc": "2022-01-12T09:00:00Z",
+          "energyWh": 960000,
+          "provenance": "modelled",
+          "qualityFlags": [],
+          "sourceRecordId": "renewables-ninja-cambridge:2022-01-12T08"
+        },
+        {
+          "startUtc": "2022-01-12T09:00:00Z",
+          "endUtc": "2022-01-12T10:00:00Z",
+          "energyWh": 5100000,
+          "provenance": "modelled",
+          "qualityFlags": [],
+          "sourceRecordId": "renewables-ninja-cambridge:2022-01-12T09"
+        },
+        {
+          "startUtc": "2022-01-12T10:00:00Z",
+          "endUtc": "2022-01-12T11:00:00Z",
+          "energyWh": 12240000,
+          "provenance": "modelled",
+          "qualityFlags": [],
+          "sourceRecordId": "renewables-ninja-cambridge:2022-01-12T10"
+        },
+        {
+          "startUtc": "2022-01-12T11:00:00Z",
+          "endUtc": "2022-01-12T12:00:00Z",
+          "energyWh": 28080000,
+          "provenance": "modelled",
+          "qualityFlags": [],
+          "sourceRecordId": "renewables-ninja-cambridge:2022-01-12T11"
+        },
+        {
+          "startUtc": "2022-01-12T12:00:00Z",
+          "endUtc": "2022-01-12T13:00:00Z",
+          "energyWh": 28380000,
+          "provenance": "modelled",
+          "qualityFlags": [],
+          "sourceRecordId": "renewables-ninja-cambridge:2022-01-12T12"
+        },
+        {
+          "startUtc": "2022-01-12T13:00:00Z",
+          "endUtc": "2022-01-12T14:00:00Z",
+          "energyWh": 23520000,
+          "provenance": "modelled",
+          "qualityFlags": [],
+          "sourceRecordId": "renewables-ninja-cambridge:2022-01-12T13"
+        },
+        {
+          "startUtc": "2022-01-12T14:00:00Z",
+          "endUtc": "2022-01-12T15:00:00Z",
+          "energyWh": 14160000,
+          "provenance": "modelled",
+          "qualityFlags": [],
+          "sourceRecordId": "renewables-ninja-cambridge:2022-01-12T14"
+        },
+        {
+          "startUtc": "2022-01-12T15:00:00Z",
+          "endUtc": "2022-01-12T16:00:00Z",
+          "energyWh": 3060000,
+          "provenance": "modelled",
+          "qualityFlags": [],
+          "sourceRecordId": "renewables-ninja-cambridge:2022-01-12T15"
+        },
+        {
+          "startUtc": "2022-01-12T16:00:00Z",
+          "endUtc": "2022-01-12T17:00:00Z",
+          "energyWh": 0,
+          "provenance": "modelled",
+          "qualityFlags": [],
+          "sourceRecordId": "renewables-ninja-cambridge:2022-01-12T16"
+        },
+        {
+          "startUtc": "2022-01-12T17:00:00Z",
+          "endUtc": "2022-01-12T18:00:00Z",
+          "energyWh": 0,
+          "provenance": "modelled",
+          "qualityFlags": [],
+          "sourceRecordId": "renewables-ninja-cambridge:2022-01-12T17"
+        },
+        {
+          "startUtc": "2022-01-12T18:00:00Z",
+          "endUtc": "2022-01-12T19:00:00Z",
+          "energyWh": 0,
+          "provenance": "modelled",
+          "qualityFlags": [],
+          "sourceRecordId": "renewables-ninja-cambridge:2022-01-12T18"
+        },
+        {
+          "startUtc": "2022-01-12T19:00:00Z",
+          "endUtc": "2022-01-12T20:00:00Z",
+          "energyWh": 0,
+          "provenance": "modelled",
+          "qualityFlags": [],
+          "sourceRecordId": "renewables-ninja-cambridge:2022-01-12T19"
+        },
+        {
+          "startUtc": "2022-01-12T20:00:00Z",
+          "endUtc": "2022-01-12T21:00:00Z",
+          "energyWh": 0,
+          "provenance": "modelled",
+          "qualityFlags": [],
+          "sourceRecordId": "renewables-ninja-cambridge:2022-01-12T20"
+        },
+        {
+          "startUtc": "2022-01-12T21:00:00Z",
+          "endUtc": "2022-01-12T22:00:00Z",
+          "energyWh": 0,
+          "provenance": "modelled",
+          "qualityFlags": [],
+          "sourceRecordId": "renewables-ninja-cambridge:2022-01-12T21"
+        },
+        {
+          "startUtc": "2022-01-12T22:00:00Z",
+          "endUtc": "2022-01-12T23:00:00Z",
+          "energyWh": 0,
+          "provenance": "modelled",
+          "qualityFlags": [],
+          "sourceRecordId": "renewables-ninja-cambridge:2022-01-12T22"
+        },
+        {
+          "startUtc": "2022-01-12T23:00:00Z",
+          "endUtc": "2022-01-13T00:00:00Z",
+          "energyWh": 0,
+          "provenance": "modelled",
+          "qualityFlags": [],
+          "sourceRecordId": "renewables-ninja-cambridge:2022-01-12T23"
+        }
+      ]
+    },
+    "tenants": [
+      {
+        "id": "tenant-a",
+        "label": "Tenant A · daytime-led",
+        "description": "An anonymous university building with a pronounced occupied-hours load shape.",
+        "demand": {
+          "id": "tenant-a-demand",
+          "label": "Tenant A demand",
+          "points": [
+            {
+              "startUtc": "2022-01-12T00:00:00Z",
+              "endUtc": "2022-01-12T01:00:00Z",
+              "energyWh": 200,
+              "provenance": "aggregated",
+              "qualityFlags": [],
+              "sourceRecordId": "anonymous-campus-a:2022-01-12T00"
+            },
+            {
+              "startUtc": "2022-01-12T01:00:00Z",
+              "endUtc": "2022-01-12T02:00:00Z",
+              "energyWh": 200,
+              "provenance": "aggregated",
+              "qualityFlags": [],
+              "sourceRecordId": "anonymous-campus-a:2022-01-12T01"
+            },
+            {
+              "startUtc": "2022-01-12T02:00:00Z",
+              "endUtc": "2022-01-12T03:00:00Z",
+              "energyWh": 200,
+              "provenance": "aggregated",
+              "qualityFlags": [],
+              "sourceRecordId": "anonymous-campus-a:2022-01-12T02"
+            },
+            {
+              "startUtc": "2022-01-12T03:00:00Z",
+              "endUtc": "2022-01-12T04:00:00Z",
+              "energyWh": 200,
+              "provenance": "aggregated",
+              "qualityFlags": [],
+              "sourceRecordId": "anonymous-campus-a:2022-01-12T03"
+            },
+            {
+              "startUtc": "2022-01-12T04:00:00Z",
+              "endUtc": "2022-01-12T05:00:00Z",
+              "energyWh": 200,
+              "provenance": "aggregated",
+              "qualityFlags": [],
+              "sourceRecordId": "anonymous-campus-a:2022-01-12T04"
+            },
+            {
+              "startUtc": "2022-01-12T05:00:00Z",
+              "endUtc": "2022-01-12T06:00:00Z",
+              "energyWh": 200,
+              "provenance": "aggregated",
+              "qualityFlags": [],
+              "sourceRecordId": "anonymous-campus-a:2022-01-12T05"
+            },
+            {
+              "startUtc": "2022-01-12T06:00:00Z",
+              "endUtc": "2022-01-12T07:00:00Z",
+              "energyWh": 15100,
+              "provenance": "aggregated",
+              "qualityFlags": [],
+              "sourceRecordId": "anonymous-campus-a:2022-01-12T06"
+            },
+            {
+              "startUtc": "2022-01-12T07:00:00Z",
+              "endUtc": "2022-01-12T08:00:00Z",
+              "energyWh": 16700,
+              "provenance": "aggregated",
+              "qualityFlags": [],
+              "sourceRecordId": "anonymous-campus-a:2022-01-12T07"
+            },
+            {
+              "startUtc": "2022-01-12T08:00:00Z",
+              "endUtc": "2022-01-12T09:00:00Z",
+              "energyWh": 16800,
+              "provenance": "aggregated",
+              "qualityFlags": [],
+              "sourceRecordId": "anonymous-campus-a:2022-01-12T08"
+            },
+            {
+              "startUtc": "2022-01-12T09:00:00Z",
+              "endUtc": "2022-01-12T10:00:00Z",
+              "energyWh": 16200,
+              "provenance": "aggregated",
+              "qualityFlags": [],
+              "sourceRecordId": "anonymous-campus-a:2022-01-12T09"
+            },
+            {
+              "startUtc": "2022-01-12T10:00:00Z",
+              "endUtc": "2022-01-12T11:00:00Z",
+              "energyWh": 16700,
+              "provenance": "aggregated",
+              "qualityFlags": [],
+              "sourceRecordId": "anonymous-campus-a:2022-01-12T10"
+            },
+            {
+              "startUtc": "2022-01-12T11:00:00Z",
+              "endUtc": "2022-01-12T12:00:00Z",
+              "energyWh": 15800,
+              "provenance": "aggregated",
+              "qualityFlags": [],
+              "sourceRecordId": "anonymous-campus-a:2022-01-12T11"
+            },
+            {
+              "startUtc": "2022-01-12T12:00:00Z",
+              "endUtc": "2022-01-12T13:00:00Z",
+              "energyWh": 16200,
+              "provenance": "aggregated",
+              "qualityFlags": [],
+              "sourceRecordId": "anonymous-campus-a:2022-01-12T12"
+            },
+            {
+              "startUtc": "2022-01-12T13:00:00Z",
+              "endUtc": "2022-01-12T14:00:00Z",
+              "energyWh": 15600,
+              "provenance": "aggregated",
+              "qualityFlags": [],
+              "sourceRecordId": "anonymous-campus-a:2022-01-12T13"
+            },
+            {
+              "startUtc": "2022-01-12T14:00:00Z",
+              "endUtc": "2022-01-12T15:00:00Z",
+              "energyWh": 16100,
+              "provenance": "aggregated",
+              "qualityFlags": [],
+              "sourceRecordId": "anonymous-campus-a:2022-01-12T14"
+            },
+            {
+              "startUtc": "2022-01-12T15:00:00Z",
+              "endUtc": "2022-01-12T16:00:00Z",
+              "energyWh": 15600,
+              "provenance": "aggregated",
+              "qualityFlags": [],
+              "sourceRecordId": "anonymous-campus-a:2022-01-12T15"
+            },
+            {
+              "startUtc": "2022-01-12T16:00:00Z",
+              "endUtc": "2022-01-12T17:00:00Z",
+              "energyWh": 16100,
+              "provenance": "aggregated",
+              "qualityFlags": [],
+              "sourceRecordId": "anonymous-campus-a:2022-01-12T16"
+            },
+            {
+              "startUtc": "2022-01-12T17:00:00Z",
+              "endUtc": "2022-01-12T18:00:00Z",
+              "energyWh": 15700,
+              "provenance": "aggregated",
+              "qualityFlags": [],
+              "sourceRecordId": "anonymous-campus-a:2022-01-12T17"
+            },
+            {
+              "startUtc": "2022-01-12T18:00:00Z",
+              "endUtc": "2022-01-12T19:00:00Z",
+              "energyWh": 16300,
+              "provenance": "aggregated",
+              "qualityFlags": [],
+              "sourceRecordId": "anonymous-campus-a:2022-01-12T18"
+            },
+            {
+              "startUtc": "2022-01-12T19:00:00Z",
+              "endUtc": "2022-01-12T20:00:00Z",
+              "energyWh": 11600,
+              "provenance": "aggregated",
+              "qualityFlags": [],
+              "sourceRecordId": "anonymous-campus-a:2022-01-12T19"
+            },
+            {
+              "startUtc": "2022-01-12T20:00:00Z",
+              "endUtc": "2022-01-12T21:00:00Z",
+              "energyWh": 1700,
+              "provenance": "aggregated",
+              "qualityFlags": [],
+              "sourceRecordId": "anonymous-campus-a:2022-01-12T20"
+            },
+            {
+              "startUtc": "2022-01-12T21:00:00Z",
+              "endUtc": "2022-01-12T22:00:00Z",
+              "energyWh": 200,
+              "provenance": "aggregated",
+              "qualityFlags": [],
+              "sourceRecordId": "anonymous-campus-a:2022-01-12T21"
+            },
+            {
+              "startUtc": "2022-01-12T22:00:00Z",
+              "endUtc": "2022-01-12T23:00:00Z",
+              "energyWh": 200,
+              "provenance": "aggregated",
+              "qualityFlags": [],
+              "sourceRecordId": "anonymous-campus-a:2022-01-12T22"
+            },
+            {
+              "startUtc": "2022-01-12T23:00:00Z",
+              "endUtc": "2022-01-13T00:00:00Z",
+              "energyWh": 200,
+              "provenance": "aggregated",
+              "qualityFlags": [],
+              "sourceRecordId": "anonymous-campus-a:2022-01-12T23"
+            }
+          ]
+        }
+      },
+      {
+        "id": "tenant-b",
+        "label": "Tenant B · steady base",
+        "description": "An anonymous university building with a comparatively stable base load.",
+        "demand": {
+          "id": "tenant-b-demand",
+          "label": "Tenant B demand",
+          "points": [
+            {
+              "startUtc": "2022-01-12T00:00:00Z",
+              "endUtc": "2022-01-12T01:00:00Z",
+              "energyWh": 12375,
+              "provenance": "aggregated",
+              "qualityFlags": [],
+              "sourceRecordId": "anonymous-campus-b:2022-01-12T00"
+            },
+            {
+              "startUtc": "2022-01-12T01:00:00Z",
+              "endUtc": "2022-01-12T02:00:00Z",
+              "energyWh": 12375,
+              "provenance": "aggregated",
+              "qualityFlags": [],
+              "sourceRecordId": "anonymous-campus-b:2022-01-12T01"
+            },
+            {
+              "startUtc": "2022-01-12T02:00:00Z",
+              "endUtc": "2022-01-12T03:00:00Z",
+              "energyWh": 12375,
+              "provenance": "aggregated",
+              "qualityFlags": [],
+              "sourceRecordId": "anonymous-campus-b:2022-01-12T02"
+            },
+            {
+              "startUtc": "2022-01-12T03:00:00Z",
+              "endUtc": "2022-01-12T04:00:00Z",
+              "energyWh": 12240,
+              "provenance": "aggregated",
+              "qualityFlags": [],
+              "sourceRecordId": "anonymous-campus-b:2022-01-12T03"
+            },
+            {
+              "startUtc": "2022-01-12T04:00:00Z",
+              "endUtc": "2022-01-12T05:00:00Z",
+              "energyWh": 12240,
+              "provenance": "aggregated",
+              "qualityFlags": [],
+              "sourceRecordId": "anonymous-campus-b:2022-01-12T04"
+            },
+            {
+              "startUtc": "2022-01-12T05:00:00Z",
+              "endUtc": "2022-01-12T06:00:00Z",
+              "energyWh": 12150,
+              "provenance": "aggregated",
+              "qualityFlags": [],
+              "sourceRecordId": "anonymous-campus-b:2022-01-12T05"
+            },
+            {
+              "startUtc": "2022-01-12T06:00:00Z",
+              "endUtc": "2022-01-12T07:00:00Z",
+              "energyWh": 12150,
+              "provenance": "aggregated",
+              "qualityFlags": [],
+              "sourceRecordId": "anonymous-campus-b:2022-01-12T06"
+            },
+            {
+              "startUtc": "2022-01-12T07:00:00Z",
+              "endUtc": "2022-01-12T08:00:00Z",
+              "energyWh": 12240,
+              "provenance": "aggregated",
+              "qualityFlags": [],
+              "sourceRecordId": "anonymous-campus-b:2022-01-12T07"
+            },
+            {
+              "startUtc": "2022-01-12T08:00:00Z",
+              "endUtc": "2022-01-12T09:00:00Z",
+              "energyWh": 12600,
+              "provenance": "aggregated",
+              "qualityFlags": [],
+              "sourceRecordId": "anonymous-campus-b:2022-01-12T08"
+            },
+            {
+              "startUtc": "2022-01-12T09:00:00Z",
+              "endUtc": "2022-01-12T10:00:00Z",
+              "energyWh": 12510,
+              "provenance": "aggregated",
+              "qualityFlags": [],
+              "sourceRecordId": "anonymous-campus-b:2022-01-12T09"
+            },
+            {
+              "startUtc": "2022-01-12T10:00:00Z",
+              "endUtc": "2022-01-12T11:00:00Z",
+              "energyWh": 12600,
+              "provenance": "aggregated",
+              "qualityFlags": [],
+              "sourceRecordId": "anonymous-campus-b:2022-01-12T10"
+            },
+            {
+              "startUtc": "2022-01-12T11:00:00Z",
+              "endUtc": "2022-01-12T12:00:00Z",
+              "energyWh": 12690,
+              "provenance": "aggregated",
+              "qualityFlags": [],
+              "sourceRecordId": "anonymous-campus-b:2022-01-12T11"
+            },
+            {
+              "startUtc": "2022-01-12T12:00:00Z",
+              "endUtc": "2022-01-12T13:00:00Z",
+              "energyWh": 12600,
+              "provenance": "aggregated",
+              "qualityFlags": [],
+              "sourceRecordId": "anonymous-campus-b:2022-01-12T12"
+            },
+            {
+              "startUtc": "2022-01-12T13:00:00Z",
+              "endUtc": "2022-01-12T14:00:00Z",
+              "energyWh": 12690,
+              "provenance": "aggregated",
+              "qualityFlags": [],
+              "sourceRecordId": "anonymous-campus-b:2022-01-12T13"
+            },
+            {
+              "startUtc": "2022-01-12T14:00:00Z",
+              "endUtc": "2022-01-12T15:00:00Z",
+              "energyWh": 12600,
+              "provenance": "aggregated",
+              "qualityFlags": [],
+              "sourceRecordId": "anonymous-campus-b:2022-01-12T14"
+            },
+            {
+              "startUtc": "2022-01-12T15:00:00Z",
+              "endUtc": "2022-01-12T16:00:00Z",
+              "energyWh": 12690,
+              "provenance": "aggregated",
+              "qualityFlags": [],
+              "sourceRecordId": "anonymous-campus-b:2022-01-12T15"
+            },
+            {
+              "startUtc": "2022-01-12T16:00:00Z",
+              "endUtc": "2022-01-12T17:00:00Z",
+              "energyWh": 12600,
+              "provenance": "aggregated",
+              "qualityFlags": [],
+              "sourceRecordId": "anonymous-campus-b:2022-01-12T16"
+            },
+            {
+              "startUtc": "2022-01-12T17:00:00Z",
+              "endUtc": "2022-01-12T18:00:00Z",
+              "energyWh": 12960,
+              "provenance": "aggregated",
+              "qualityFlags": [],
+              "sourceRecordId": "anonymous-campus-b:2022-01-12T17"
+            },
+            {
+              "startUtc": "2022-01-12T18:00:00Z",
+              "endUtc": "2022-01-12T19:00:00Z",
+              "energyWh": 13410,
+              "provenance": "aggregated",
+              "qualityFlags": [],
+              "sourceRecordId": "anonymous-campus-b:2022-01-12T18"
+            },
+            {
+              "startUtc": "2022-01-12T19:00:00Z",
+              "endUtc": "2022-01-12T20:00:00Z",
+              "energyWh": 12240,
+              "provenance": "aggregated",
+              "qualityFlags": [],
+              "sourceRecordId": "anonymous-campus-b:2022-01-12T19"
+            },
+            {
+              "startUtc": "2022-01-12T20:00:00Z",
+              "endUtc": "2022-01-12T21:00:00Z",
+              "energyWh": 12240,
+              "provenance": "aggregated",
+              "qualityFlags": [],
+              "sourceRecordId": "anonymous-campus-b:2022-01-12T20"
+            },
+            {
+              "startUtc": "2022-01-12T21:00:00Z",
+              "endUtc": "2022-01-12T22:00:00Z",
+              "energyWh": 12240,
+              "provenance": "aggregated",
+              "qualityFlags": [],
+              "sourceRecordId": "anonymous-campus-b:2022-01-12T21"
+            },
+            {
+              "startUtc": "2022-01-12T22:00:00Z",
+              "endUtc": "2022-01-12T23:00:00Z",
+              "energyWh": 12150,
+              "provenance": "aggregated",
+              "qualityFlags": [],
+              "sourceRecordId": "anonymous-campus-b:2022-01-12T22"
+            },
+            {
+              "startUtc": "2022-01-12T23:00:00Z",
+              "endUtc": "2022-01-13T00:00:00Z",
+              "energyWh": 12150,
+              "provenance": "aggregated",
+              "qualityFlags": [],
+              "sourceRecordId": "anonymous-campus-b:2022-01-12T23"
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "sources": [
+    {
+      "id": "cambridge-estates-v2.1",
+      "name": "Cambridge University Estates Building Energy Archive",
+      "url": "https://github.com/EECi/Cambridge-Estates-Building-Energy-Archive",
+      "version": "2.1 / 2022 snapshot",
+      "license": "MIT",
+      "retrievedAt": "2026-07-31T00:00:00Z",
+      "sha256": "fa3dd12085de5bf68c150aed928752e76a7996fbe74110b0fe8d7dca576b7193",
+      "provenance": "aggregated",
+      "limitations": [
+        "Anonymous building IDs.",
+        "Raw half-hour readings were cleaned and aggregated to hourly by the archive.",
+        "Missing or invalid archive values may have been replaced with zero."
+      ],
+      "sha256SecondaryTenant": "90494cb462858589e42a7da120bb66c448106c9b9b829a4ecad1708a57c46a3f"
+    },
+    {
+      "id": "renewables-ninja-cambridge",
+      "name": "Renewables.ninja Cambridge solar model (distributed in Cambridge archive)",
+      "url": "https://www.renewables.ninja/",
+      "version": "MERRA-2 / 2022 snapshot",
+      "license": "Source dataset terms; redistributed here as a derived 24-point excerpt under archive context",
+      "retrievedAt": "2026-07-31T00:00:00Z",
+      "sha256": "51db9377b1c2d0867d486443572e3b3b54419076e86f890cbaf1f577173c2f96",
+      "provenance": "modelled",
+      "limitations": [
+        "Weather reanalysis and technology model; not measured generation."
+      ]
+    },
+    {
+      "id": "neso-demand-2025",
+      "name": "NESO Historic Demand Data",
+      "url": "https://www.neso.energy/data-portal/historic-demand-data",
+      "version": "2025",
+      "license": "NESO Open Data terms",
+      "retrievedAt": "2026-07-31T00:00:00Z",
+      "sha256": "8b8be946bbb084bc28fbf95a71fad0fceb5543b98e02755235130a42beaee4e0",
+      "provenance": "aggregated",
+      "limitations": [
+        "National system context only; not building-level demand."
+      ]
+    }
+  ],
+  "context": {
+    "nesoNationalDemandMw": [
+      28698,
+      28424,
+      27606,
+      27000,
+      26582,
+      27772,
+      32620,
+      38616,
+      41578,
+      42882,
+      42926,
+      43035,
+      43236,
+      42876,
+      42704,
+      42704,
+      44927,
+      45796,
+      45058,
+      43050,
+      40906,
+      37890,
+      34200,
+      30690
+    ],
+    "label": "GB national demand · representative winter weekday (2025-01-08)",
+    "provenance": "aggregated"
+  },
+  "qualitySummary": [
+    "Cambridge archive electricity was aggregated from raw half-hourly meter readings to hourly values.",
+    "The archive replaces missing or invalid readings with zero; suspicious zeros remain quality-limited.",
+    "PV is a Cambridge weather-reanalysis model, not a live or measured rooftop meter.",
+    "Building identities remain anonymous; exact addresses are neither used nor exposed."
+  ]
+}
