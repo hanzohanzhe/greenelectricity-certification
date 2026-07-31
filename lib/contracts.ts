@@ -115,6 +115,7 @@ export interface EvidenceManifest {
   allocationRule: AllocationRule;
   engineVersion: string;
   transformationVersion: string;
+  scenarioSha256: string;
   resultSha256: string;
   merkleRoot: string;
   nonceStrategy: string;
@@ -133,10 +134,60 @@ export interface Attestation {
     tenantAllocations: Record<string, number>;
   };
   ruleId: AllocationRuleId;
+  ruleVersion: string;
   manifestHash: string;
   merkleRoot: string;
   verificationUrl: string;
   blockchainAnchoring: "not_enabled";
+}
+
+export interface MerkleProofNode {
+  siblingHash: string;
+  position: "left" | "right";
+}
+
+export interface IntervalProof {
+  leafIndex: number;
+  leafHash: string;
+  nonce: string;
+  path: MerkleProofNode[];
+}
+
+export interface EvidencePackage {
+  schemaVersion: "1.0.0";
+  scenarioId: string;
+  scenario: Scenario;
+  intervals: IntervalAllocation[];
+  manifest: EvidenceManifest;
+  manifestHash: string;
+  attestation: Attestation;
+  proofs: IntervalProof[];
+}
+
+export type EvidenceCheckId =
+  | "canonicalIntervalResultHash"
+  | "merkleRoot"
+  | "inclusionProofs"
+  | "manifestHash"
+  | "attestationBinding"
+  | "scenarioId"
+  | "period"
+  | "rule"
+  | "totals";
+
+export interface VerificationIssue {
+  code: string;
+  check: EvidenceCheckId | "package";
+  message: string;
+  path?: string;
+  leafIndex?: number;
+}
+
+export interface VerificationResult {
+  valid: boolean;
+  checks: Record<EvidenceCheckId, boolean>;
+  errors: VerificationIssue[];
+  warnings: VerificationIssue[];
 }
 
 export function validatePoint(point: TimeSeriesPoint): void {

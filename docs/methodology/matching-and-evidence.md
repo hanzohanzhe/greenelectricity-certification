@@ -32,3 +32,65 @@ The demonstration nonce is deterministic for reproducibility. A later private
 disclosure package would use random nonces. Hashing is not anonymisation, and a
 Merkle root proves that disclosed data matches a commitment—not that upstream
 metering was accurate.
+
+## Versioned evidence package
+
+`EvidencePackage` version 1.0.0 is a JSON-serializable disclosure bundle. It
+contains the scenario, deterministic interval results, manifest, manifest hash,
+demonstration attestation and one inclusion proof for every interval. Including
+the scenario allows an independent verifier to run the published allocation
+rule again rather than trusting the packaged result array.
+
+The manifest binds:
+
+- canonical scenario hash;
+- canonical interval-result hash;
+- allocation rule ID, version and parameters;
+- period and granularity;
+- engine and transformation versions;
+- Merkle root.
+
+Each `IntervalProof` records its leaf index, declared leaf hash, deterministic
+demo nonce, and ordered sibling path. Every path node records whether the
+sibling is on the left or right. Verification recomputes the leaf hash from the
+interval and nonce. For an unpaired final node, the verifier requires the right
+sibling to equal the current node, preserving the documented duplicate-last
+rule.
+
+## Independent verification
+
+`verifyEvidencePackage` accepts parsed JSON or a serialized JSON string and
+returns structured checks, errors and warnings. It does not consume UI state or
+previously calculated success flags. It independently:
+
+1. checks the package version and required shape;
+2. binds the package, scenario, manifest and attestation scenario IDs;
+3. validates the rule ID/version across manifest, intervals and attestation;
+4. reruns the matching engine from the packaged scenario and manifest rule;
+5. recomputes canonical scenario and interval-result hashes;
+6. rebuilds the Merkle root from interval content and proof nonces;
+7. verifies every inclusion path, including direction and expected path depth;
+8. recomputes the manifest hash;
+9. recomputes period boundaries and attestation totals;
+10. binds the attestation proof ID, manifest hash and Merkle root.
+
+Malformed external packages return a failed `VerificationResult`; they do not
+crash the caller. Direct proof-programming errors such as an out-of-range index,
+invalid hash encoding or illegal sibling position fail explicitly.
+
+## Security boundary
+
+A valid result proves only that the package is internally self-consistent under
+the published algorithms and still matches its declared hashes. There is no
+trusted timestamp, digital signature, issuer identity or external anchor.
+Consequently, verification cannot prove that source meters were truthful, that
+a completely rewritten and re-hashed package came from an authorised issuer,
+that anything was written to a blockchain, or that the demonstration has legal
+certificate status. Deterministic demo nonces support reproducibility and are
+not production privacy protection.
+
+The fixed five-interval Golden Dataset is stored at
+`tests/fixtures/evidence-package.golden.json`. It includes the fixed input,
+intervals, nonces, manifest, manifest hash, Merkle root, all proofs, the first
+fixed path and expected check results. Regenerate it intentionally with
+`npm run fixture:evidence`; normal tests only read the frozen file.

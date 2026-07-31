@@ -1,0 +1,644 @@
+{
+  "fixtureVersion": "1.0.0",
+  "input": {
+    "scenario": {
+      "schemaVersion": "1.0.0",
+      "id": "evidence-golden",
+      "label": "Evidence Golden Dataset",
+      "description": "Five fixed half-hour intervals including an odd Merkle leaf count.",
+      "representativeDay": "2025-06-01",
+      "granularityMinutes": 30,
+      "alignment": "same_day",
+      "site": {
+        "id": "golden-site",
+        "label": "Golden site",
+        "locationLabel": "Test fixture",
+        "generation": {
+          "id": "golden-pv",
+          "label": "Golden PV",
+          "capacityKwp": 5,
+          "points": [
+            {
+              "startUtc": "2025-06-01T00:00:00.000Z",
+              "endUtc": "2025-06-01T00:30:00.000Z",
+              "energyWh": 0,
+              "provenance": "user_provided",
+              "qualityFlags": [],
+              "sourceRecordId": "evidence-golden:0"
+            },
+            {
+              "startUtc": "2025-06-01T00:30:00.000Z",
+              "endUtc": "2025-06-01T01:00:00.000Z",
+              "energyWh": 1801,
+              "provenance": "user_provided",
+              "qualityFlags": [],
+              "sourceRecordId": "evidence-golden:1"
+            },
+            {
+              "startUtc": "2025-06-01T01:00:00.000Z",
+              "endUtc": "2025-06-01T01:30:00.000Z",
+              "energyWh": 3601,
+              "provenance": "user_provided",
+              "qualityFlags": [],
+              "sourceRecordId": "evidence-golden:2"
+            },
+            {
+              "startUtc": "2025-06-01T01:30:00.000Z",
+              "endUtc": "2025-06-01T02:00:00.000Z",
+              "energyWh": 900,
+              "provenance": "user_provided",
+              "qualityFlags": [],
+              "sourceRecordId": "evidence-golden:3"
+            },
+            {
+              "startUtc": "2025-06-01T02:00:00.000Z",
+              "endUtc": "2025-06-01T02:30:00.000Z",
+              "energyWh": 0,
+              "provenance": "user_provided",
+              "qualityFlags": [],
+              "sourceRecordId": "evidence-golden:4"
+            }
+          ]
+        },
+        "tenants": [
+          {
+            "id": "tenant-a",
+            "label": "Tenant A",
+            "description": "Golden tenant A",
+            "demand": {
+              "id": "golden-a",
+              "label": "Golden A demand",
+              "points": [
+                {
+                  "startUtc": "2025-06-01T00:00:00.000Z",
+                  "endUtc": "2025-06-01T00:30:00.000Z",
+                  "energyWh": 501,
+                  "provenance": "user_provided",
+                  "qualityFlags": [],
+                  "sourceRecordId": "evidence-golden:0"
+                },
+                {
+                  "startUtc": "2025-06-01T00:30:00.000Z",
+                  "endUtc": "2025-06-01T01:00:00.000Z",
+                  "energyWh": 1001,
+                  "provenance": "user_provided",
+                  "qualityFlags": [],
+                  "sourceRecordId": "evidence-golden:1"
+                },
+                {
+                  "startUtc": "2025-06-01T01:00:00.000Z",
+                  "endUtc": "2025-06-01T01:30:00.000Z",
+                  "energyWh": 1201,
+                  "provenance": "user_provided",
+                  "qualityFlags": [],
+                  "sourceRecordId": "evidence-golden:2"
+                },
+                {
+                  "startUtc": "2025-06-01T01:30:00.000Z",
+                  "endUtc": "2025-06-01T02:00:00.000Z",
+                  "energyWh": 1401,
+                  "provenance": "user_provided",
+                  "qualityFlags": [],
+                  "sourceRecordId": "evidence-golden:3"
+                },
+                {
+                  "startUtc": "2025-06-01T02:00:00.000Z",
+                  "endUtc": "2025-06-01T02:30:00.000Z",
+                  "energyWh": 701,
+                  "provenance": "user_provided",
+                  "qualityFlags": [],
+                  "sourceRecordId": "evidence-golden:4"
+                }
+              ]
+            }
+          },
+          {
+            "id": "tenant-b",
+            "label": "Tenant B",
+            "description": "Golden tenant B",
+            "demand": {
+              "id": "golden-b",
+              "label": "Golden B demand",
+              "points": [
+                {
+                  "startUtc": "2025-06-01T00:00:00.000Z",
+                  "endUtc": "2025-06-01T00:30:00.000Z",
+                  "energyWh": 899,
+                  "provenance": "user_provided",
+                  "qualityFlags": [],
+                  "sourceRecordId": "evidence-golden:0"
+                },
+                {
+                  "startUtc": "2025-06-01T00:30:00.000Z",
+                  "endUtc": "2025-06-01T01:00:00.000Z",
+                  "energyWh": 799,
+                  "provenance": "user_provided",
+                  "qualityFlags": [],
+                  "sourceRecordId": "evidence-golden:1"
+                },
+                {
+                  "startUtc": "2025-06-01T01:00:00.000Z",
+                  "endUtc": "2025-06-01T01:30:00.000Z",
+                  "energyWh": 1099,
+                  "provenance": "user_provided",
+                  "qualityFlags": [],
+                  "sourceRecordId": "evidence-golden:2"
+                },
+                {
+                  "startUtc": "2025-06-01T01:30:00.000Z",
+                  "endUtc": "2025-06-01T02:00:00.000Z",
+                  "energyWh": 599,
+                  "provenance": "user_provided",
+                  "qualityFlags": [],
+                  "sourceRecordId": "evidence-golden:3"
+                },
+                {
+                  "startUtc": "2025-06-01T02:00:00.000Z",
+                  "endUtc": "2025-06-01T02:30:00.000Z",
+                  "energyWh": 999,
+                  "provenance": "user_provided",
+                  "qualityFlags": [],
+                  "sourceRecordId": "evidence-golden:4"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "sources": [],
+      "qualitySummary": []
+    },
+    "rule": {
+      "id": "pro_rata_demand_v1",
+      "version": "1.0.0"
+    }
+  },
+  "package": {
+    "schemaVersion": "1.0.0",
+    "scenarioId": "evidence-golden",
+    "scenario": {
+      "schemaVersion": "1.0.0",
+      "id": "evidence-golden",
+      "label": "Evidence Golden Dataset",
+      "description": "Five fixed half-hour intervals including an odd Merkle leaf count.",
+      "representativeDay": "2025-06-01",
+      "granularityMinutes": 30,
+      "alignment": "same_day",
+      "site": {
+        "id": "golden-site",
+        "label": "Golden site",
+        "locationLabel": "Test fixture",
+        "generation": {
+          "id": "golden-pv",
+          "label": "Golden PV",
+          "capacityKwp": 5,
+          "points": [
+            {
+              "startUtc": "2025-06-01T00:00:00.000Z",
+              "endUtc": "2025-06-01T00:30:00.000Z",
+              "energyWh": 0,
+              "provenance": "user_provided",
+              "qualityFlags": [],
+              "sourceRecordId": "evidence-golden:0"
+            },
+            {
+              "startUtc": "2025-06-01T00:30:00.000Z",
+              "endUtc": "2025-06-01T01:00:00.000Z",
+              "energyWh": 1801,
+              "provenance": "user_provided",
+              "qualityFlags": [],
+              "sourceRecordId": "evidence-golden:1"
+            },
+            {
+              "startUtc": "2025-06-01T01:00:00.000Z",
+              "endUtc": "2025-06-01T01:30:00.000Z",
+              "energyWh": 3601,
+              "provenance": "user_provided",
+              "qualityFlags": [],
+              "sourceRecordId": "evidence-golden:2"
+            },
+            {
+              "startUtc": "2025-06-01T01:30:00.000Z",
+              "endUtc": "2025-06-01T02:00:00.000Z",
+              "energyWh": 900,
+              "provenance": "user_provided",
+              "qualityFlags": [],
+              "sourceRecordId": "evidence-golden:3"
+            },
+            {
+              "startUtc": "2025-06-01T02:00:00.000Z",
+              "endUtc": "2025-06-01T02:30:00.000Z",
+              "energyWh": 0,
+              "provenance": "user_provided",
+              "qualityFlags": [],
+              "sourceRecordId": "evidence-golden:4"
+            }
+          ]
+        },
+        "tenants": [
+          {
+            "id": "tenant-a",
+            "label": "Tenant A",
+            "description": "Golden tenant A",
+            "demand": {
+              "id": "golden-a",
+              "label": "Golden A demand",
+              "points": [
+                {
+                  "startUtc": "2025-06-01T00:00:00.000Z",
+                  "endUtc": "2025-06-01T00:30:00.000Z",
+                  "energyWh": 501,
+                  "provenance": "user_provided",
+                  "qualityFlags": [],
+                  "sourceRecordId": "evidence-golden:0"
+                },
+                {
+                  "startUtc": "2025-06-01T00:30:00.000Z",
+                  "endUtc": "2025-06-01T01:00:00.000Z",
+                  "energyWh": 1001,
+                  "provenance": "user_provided",
+                  "qualityFlags": [],
+                  "sourceRecordId": "evidence-golden:1"
+                },
+                {
+                  "startUtc": "2025-06-01T01:00:00.000Z",
+                  "endUtc": "2025-06-01T01:30:00.000Z",
+                  "energyWh": 1201,
+                  "provenance": "user_provided",
+                  "qualityFlags": [],
+                  "sourceRecordId": "evidence-golden:2"
+                },
+                {
+                  "startUtc": "2025-06-01T01:30:00.000Z",
+                  "endUtc": "2025-06-01T02:00:00.000Z",
+                  "energyWh": 1401,
+                  "provenance": "user_provided",
+                  "qualityFlags": [],
+                  "sourceRecordId": "evidence-golden:3"
+                },
+                {
+                  "startUtc": "2025-06-01T02:00:00.000Z",
+                  "endUtc": "2025-06-01T02:30:00.000Z",
+                  "energyWh": 701,
+                  "provenance": "user_provided",
+                  "qualityFlags": [],
+                  "sourceRecordId": "evidence-golden:4"
+                }
+              ]
+            }
+          },
+          {
+            "id": "tenant-b",
+            "label": "Tenant B",
+            "description": "Golden tenant B",
+            "demand": {
+              "id": "golden-b",
+              "label": "Golden B demand",
+              "points": [
+                {
+                  "startUtc": "2025-06-01T00:00:00.000Z",
+                  "endUtc": "2025-06-01T00:30:00.000Z",
+                  "energyWh": 899,
+                  "provenance": "user_provided",
+                  "qualityFlags": [],
+                  "sourceRecordId": "evidence-golden:0"
+                },
+                {
+                  "startUtc": "2025-06-01T00:30:00.000Z",
+                  "endUtc": "2025-06-01T01:00:00.000Z",
+                  "energyWh": 799,
+                  "provenance": "user_provided",
+                  "qualityFlags": [],
+                  "sourceRecordId": "evidence-golden:1"
+                },
+                {
+                  "startUtc": "2025-06-01T01:00:00.000Z",
+                  "endUtc": "2025-06-01T01:30:00.000Z",
+                  "energyWh": 1099,
+                  "provenance": "user_provided",
+                  "qualityFlags": [],
+                  "sourceRecordId": "evidence-golden:2"
+                },
+                {
+                  "startUtc": "2025-06-01T01:30:00.000Z",
+                  "endUtc": "2025-06-01T02:00:00.000Z",
+                  "energyWh": 599,
+                  "provenance": "user_provided",
+                  "qualityFlags": [],
+                  "sourceRecordId": "evidence-golden:3"
+                },
+                {
+                  "startUtc": "2025-06-01T02:00:00.000Z",
+                  "endUtc": "2025-06-01T02:30:00.000Z",
+                  "energyWh": 999,
+                  "provenance": "user_provided",
+                  "qualityFlags": [],
+                  "sourceRecordId": "evidence-golden:4"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "sources": [],
+      "qualitySummary": []
+    },
+    "intervals": [
+      {
+        "startUtc": "2025-06-01T00:00:00.000Z",
+        "endUtc": "2025-06-01T00:30:00.000Z",
+        "generationWh": 0,
+        "totalDemandWh": 1400,
+        "onsiteMatchedWh": 0,
+        "exportWh": 0,
+        "gridImportWh": 1400,
+        "tenantAllocationsWh": {
+          "tenant-a": 0,
+          "tenant-b": 0
+        },
+        "tenantGridImportWh": {
+          "tenant-a": 501,
+          "tenant-b": 899
+        },
+        "status": "verified-input",
+        "qualityFlags": [],
+        "ruleId": "pro_rata_demand_v1",
+        "ruleVersion": "1.0.0"
+      },
+      {
+        "startUtc": "2025-06-01T00:30:00.000Z",
+        "endUtc": "2025-06-01T01:00:00.000Z",
+        "generationWh": 1801,
+        "totalDemandWh": 1800,
+        "onsiteMatchedWh": 1800,
+        "exportWh": 1,
+        "gridImportWh": 0,
+        "tenantAllocationsWh": {
+          "tenant-a": 1001,
+          "tenant-b": 799
+        },
+        "tenantGridImportWh": {
+          "tenant-a": 0,
+          "tenant-b": 0
+        },
+        "status": "verified-input",
+        "qualityFlags": [],
+        "ruleId": "pro_rata_demand_v1",
+        "ruleVersion": "1.0.0"
+      },
+      {
+        "startUtc": "2025-06-01T01:00:00.000Z",
+        "endUtc": "2025-06-01T01:30:00.000Z",
+        "generationWh": 3601,
+        "totalDemandWh": 2300,
+        "onsiteMatchedWh": 2300,
+        "exportWh": 1301,
+        "gridImportWh": 0,
+        "tenantAllocationsWh": {
+          "tenant-a": 1201,
+          "tenant-b": 1099
+        },
+        "tenantGridImportWh": {
+          "tenant-a": 0,
+          "tenant-b": 0
+        },
+        "status": "verified-input",
+        "qualityFlags": [],
+        "ruleId": "pro_rata_demand_v1",
+        "ruleVersion": "1.0.0"
+      },
+      {
+        "startUtc": "2025-06-01T01:30:00.000Z",
+        "endUtc": "2025-06-01T02:00:00.000Z",
+        "generationWh": 900,
+        "totalDemandWh": 2000,
+        "onsiteMatchedWh": 900,
+        "exportWh": 0,
+        "gridImportWh": 1100,
+        "tenantAllocationsWh": {
+          "tenant-a": 630,
+          "tenant-b": 270
+        },
+        "tenantGridImportWh": {
+          "tenant-a": 771,
+          "tenant-b": 329
+        },
+        "status": "verified-input",
+        "qualityFlags": [],
+        "ruleId": "pro_rata_demand_v1",
+        "ruleVersion": "1.0.0"
+      },
+      {
+        "startUtc": "2025-06-01T02:00:00.000Z",
+        "endUtc": "2025-06-01T02:30:00.000Z",
+        "generationWh": 0,
+        "totalDemandWh": 1700,
+        "onsiteMatchedWh": 0,
+        "exportWh": 0,
+        "gridImportWh": 1700,
+        "tenantAllocationsWh": {
+          "tenant-a": 0,
+          "tenant-b": 0
+        },
+        "tenantGridImportWh": {
+          "tenant-a": 701,
+          "tenant-b": 999
+        },
+        "status": "verified-input",
+        "qualityFlags": [],
+        "ruleId": "pro_rata_demand_v1",
+        "ruleVersion": "1.0.0"
+      }
+    ],
+    "manifest": {
+      "schemaVersion": "1.0.0",
+      "scenarioId": "evidence-golden",
+      "generatedAt": "2026-07-31T00:00:00.000Z",
+      "sources": [],
+      "period": {
+        "startUtc": "2025-06-01T00:00:00.000Z",
+        "endUtc": "2025-06-01T02:30:00.000Z",
+        "granularityMinutes": 30
+      },
+      "alignment": "same_day",
+      "allocationRule": {
+        "id": "pro_rata_demand_v1",
+        "version": "1.0.0"
+      },
+      "engineVersion": "greenproof-matching/1.0.0",
+      "transformationVersion": "greenproof-scenario-builder/1.0.0",
+      "scenarioSha256": "726a09f098c1ee139c59546decdf58a380885b1531c0ec23d6e510271f42aaa0",
+      "resultSha256": "427d3ad6fc64a46efb5b2b7873dcb4c757cd429ec479e4c5443fcdac3c092835",
+      "merkleRoot": "6d98a77eac429550b10687a15670301a9253e60fd7c987897fbde49f5a95f659",
+      "nonceStrategy": "Deterministic versioned demo nonces for reproducibility; they are not production privacy protection.",
+      "limitations": [
+        "Demonstration using public, anonymous and modelled data; not an official energy certificate.",
+        "Hashing proves package consistency after generation, not truth at the source or issuer identity.",
+        "No trusted timestamp, digital signature or blockchain anchoring is enabled."
+      ]
+    },
+    "manifestHash": "c699d1ce6c6df2be3a752670dba986103f4992aa8d9e44d7ee356a2a092d01a2",
+    "attestation": {
+      "proofId": "GP-DEMO-C699D1CE6C6D",
+      "status": "demonstration",
+      "scenarioId": "evidence-golden",
+      "scenarioLabel": "Evidence Golden Dataset",
+      "period": {
+        "startUtc": "2025-06-01T00:00:00.000Z",
+        "endUtc": "2025-06-01T02:30:00.000Z"
+      },
+      "totalsWh": {
+        "generation": 6302,
+        "onsiteMatched": 5000,
+        "tenantAllocations": {
+          "tenant-a": 2832,
+          "tenant-b": 2168
+        }
+      },
+      "ruleId": "pro_rata_demand_v1",
+      "ruleVersion": "1.0.0",
+      "manifestHash": "c699d1ce6c6df2be3a752670dba986103f4992aa8d9e44d7ee356a2a092d01a2",
+      "merkleRoot": "6d98a77eac429550b10687a15670301a9253e60fd7c987897fbde49f5a95f659",
+      "verificationUrl": "/?view=evidence&proof=c699d1ce6c6df2be",
+      "blockchainAnchoring": "not_enabled"
+    },
+    "proofs": [
+      {
+        "leafIndex": 0,
+        "leafHash": "fdd1303917c46c0aae335525c8646d836f0eabf1355741da093a573c2b7ec386",
+        "nonce": "evidence-golden:nonce:v1:0",
+        "path": [
+          {
+            "siblingHash": "9b204070eca9e471f0c00d473bf0f6db16c85fe5ca27b6452b4cc68508313b09",
+            "position": "right"
+          },
+          {
+            "siblingHash": "c4f5d547c9acf1deca0f1465771d6add0c708b4f207429d859190b1a85a22da4",
+            "position": "right"
+          },
+          {
+            "siblingHash": "7724402b6bd3f700e5cb74d3e001b5e88377a98b4360090f9dceb5f34a931356",
+            "position": "right"
+          }
+        ]
+      },
+      {
+        "leafIndex": 1,
+        "leafHash": "9b204070eca9e471f0c00d473bf0f6db16c85fe5ca27b6452b4cc68508313b09",
+        "nonce": "evidence-golden:nonce:v1:1",
+        "path": [
+          {
+            "siblingHash": "fdd1303917c46c0aae335525c8646d836f0eabf1355741da093a573c2b7ec386",
+            "position": "left"
+          },
+          {
+            "siblingHash": "c4f5d547c9acf1deca0f1465771d6add0c708b4f207429d859190b1a85a22da4",
+            "position": "right"
+          },
+          {
+            "siblingHash": "7724402b6bd3f700e5cb74d3e001b5e88377a98b4360090f9dceb5f34a931356",
+            "position": "right"
+          }
+        ]
+      },
+      {
+        "leafIndex": 2,
+        "leafHash": "9d2861855d1414f2893dfd8d4fe59581d5f0dcd1a896b21207f0af0183a760ad",
+        "nonce": "evidence-golden:nonce:v1:2",
+        "path": [
+          {
+            "siblingHash": "e96d1bcb4942f5ebb16441128b07e1a43ff2d90c91a36f506a63639add3e8165",
+            "position": "right"
+          },
+          {
+            "siblingHash": "0d8d2c07cfd025be0a14f519f63a1922e0fbd8c591d7ebbd562e496b4bf7a8ff",
+            "position": "left"
+          },
+          {
+            "siblingHash": "7724402b6bd3f700e5cb74d3e001b5e88377a98b4360090f9dceb5f34a931356",
+            "position": "right"
+          }
+        ]
+      },
+      {
+        "leafIndex": 3,
+        "leafHash": "e96d1bcb4942f5ebb16441128b07e1a43ff2d90c91a36f506a63639add3e8165",
+        "nonce": "evidence-golden:nonce:v1:3",
+        "path": [
+          {
+            "siblingHash": "9d2861855d1414f2893dfd8d4fe59581d5f0dcd1a896b21207f0af0183a760ad",
+            "position": "left"
+          },
+          {
+            "siblingHash": "0d8d2c07cfd025be0a14f519f63a1922e0fbd8c591d7ebbd562e496b4bf7a8ff",
+            "position": "left"
+          },
+          {
+            "siblingHash": "7724402b6bd3f700e5cb74d3e001b5e88377a98b4360090f9dceb5f34a931356",
+            "position": "right"
+          }
+        ]
+      },
+      {
+        "leafIndex": 4,
+        "leafHash": "5e7100a95fbe615bde658e1cbf4ceb70a862a0edb71aed0c23f35dfc8ddeb797",
+        "nonce": "evidence-golden:nonce:v1:4",
+        "path": [
+          {
+            "siblingHash": "5e7100a95fbe615bde658e1cbf4ceb70a862a0edb71aed0c23f35dfc8ddeb797",
+            "position": "right"
+          },
+          {
+            "siblingHash": "83cdcb866627dec5450f56ab81d68285dff347b6b80a29f1115d5c0cd92647c6",
+            "position": "right"
+          },
+          {
+            "siblingHash": "cb7ba57dce627c3f11ec9bb6015ea979a6ca776b233fcb7d7483497813733b2f",
+            "position": "left"
+          }
+        ]
+      }
+    ]
+  },
+  "expected": {
+    "manifestHash": "c699d1ce6c6df2be3a752670dba986103f4992aa8d9e44d7ee356a2a092d01a2",
+    "merkleRoot": "6d98a77eac429550b10687a15670301a9253e60fd7c987897fbde49f5a95f659",
+    "nonces": [
+      "evidence-golden:nonce:v1:0",
+      "evidence-golden:nonce:v1:1",
+      "evidence-golden:nonce:v1:2",
+      "evidence-golden:nonce:v1:3",
+      "evidence-golden:nonce:v1:4"
+    ],
+    "firstProof": {
+      "leafIndex": 0,
+      "leafHash": "fdd1303917c46c0aae335525c8646d836f0eabf1355741da093a573c2b7ec386",
+      "nonce": "evidence-golden:nonce:v1:0",
+      "path": [
+        {
+          "siblingHash": "9b204070eca9e471f0c00d473bf0f6db16c85fe5ca27b6452b4cc68508313b09",
+          "position": "right"
+        },
+        {
+          "siblingHash": "c4f5d547c9acf1deca0f1465771d6add0c708b4f207429d859190b1a85a22da4",
+          "position": "right"
+        },
+        {
+          "siblingHash": "7724402b6bd3f700e5cb74d3e001b5e88377a98b4360090f9dceb5f34a931356",
+          "position": "right"
+        }
+      ]
+    },
+    "checks": {
+      "canonicalIntervalResultHash": true,
+      "merkleRoot": true,
+      "inclusionProofs": true,
+      "manifestHash": true,
+      "attestationBinding": true,
+      "scenarioId": true,
+      "period": true,
+      "rule": true,
+      "totals": true
+    }
+  }
+}

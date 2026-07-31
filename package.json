@@ -10,8 +10,9 @@
     "build": "vinext build",
     "start": "vinext start",
     "typecheck": "tsc --noEmit",
-    "test:unit": "node --import tsx --test tests/engine.test.ts",
+    "test:unit": "node --import tsx --test tests/*.test.ts",
     "test:data": "python data-pipeline/validate_scenario.py public/data/scenarios/cambridge-campus-real.json",
+    "fixture:evidence": "node --import tsx tests/generate-evidence-fixture.ts",
     "test": "npm run typecheck && npm run test:unit && npm run build && node --test tests/rendered-html.test.mjs",
     "lint": "eslint . --ignore-pattern dist --ignore-pattern .next",
     "db:generate": "drizzle-kit generate"
