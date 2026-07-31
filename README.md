@@ -29,11 +29,17 @@ packages are bundled under `public/data/scenarios`.
 - `lib/contracts.ts`: shared data contracts and validation
 - `lib/energy-engine.ts`: deterministic integer-Wh allocation engine
 - `lib/evidence.ts`: canonical JSON, SHA-256, Merkle and attestation
+- `lib/evidence-file.ts`: deterministic local package files, import checks and tamper helpers
 - `data-pipeline/`: reproducible public-data scenario builders
 - `public/data/scenarios/`: deployable, anonymised snapshots
 - `docs/`: method, sources, pilot and privacy decisions
 - `tests/`: golden, property, tamper and rendered-build tests
 - `outputs/greenproof-mvp-codex-prompts/`: original prompts and execution logs
+
+The Evidence view can generate and download a complete JSON package, load one
+from local disk, and display the independent verifier's recomputed checks. File
+contents stay in the browser; no upload endpoint, identity system or database
+is used.
 
 ## Commands
 

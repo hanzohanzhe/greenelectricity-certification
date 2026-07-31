@@ -94,3 +94,33 @@ The fixed five-interval Golden Dataset is stored at
 intervals, nonces, manifest, manifest hash, Merkle root, all proofs, the first
 fixed path and expected check results. Regenerate it intentionally with
 `npm run fixture:evidence`; normal tests only read the frozen file.
+
+## Browser-local download and verification
+
+The Evidence view now calls `buildEvidencePackage` and immediately passes the
+result to `verifyEvidencePackage`. The displayed status, individual checks,
+errors and warnings come directly from that independent result. The 1 Wh
+demonstration changes a copied interval and submits the changed package to the
+same verifier; restoring it reruns verification on the original package. A
+selected interval can also be checked independently with `verifyMerkleProof`,
+which recomputes its leaf from interval content and nonce.
+
+Users can download the complete package as deterministic canonical JSON and
+later load one JSON file from local disk. File handling has a 5 MiB limit and
+returns structured errors for empty, malformed, unsupported or incomplete
+packages. File names, extensions and MIME types are convenience hints only;
+the package content and verification result determine validity. Imported
+content is not executed, uploaded, written to the URL or saved in browser
+storage. Temporary download object URLs are revoked immediately after use.
+
+An EvidencePackage contains the complete scenario and all interval-level data.
+The public-data demonstration is anonymous, but a real pilot package may reveal
+commercially sensitive generation and demand patterns. Production disclosure
+therefore requires an explicit access-control and data-minimisation design.
+Browser-local processing reduces unintended disclosure in this MVP but does
+not itself provide encryption, anonymity or authorisation.
+
+Successful local verification continues to prove package self-consistency
+only. It does not add a trusted issuer signature, a trusted timestamp or an
+external anchor. A party can rewrite a whole package and recompute every hash,
+so internal validity alone cannot establish issuer identity or source truth.

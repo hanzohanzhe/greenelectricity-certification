@@ -4,21 +4,48 @@ import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import type {
   AllocationRuleId,
-  Attestation,
-  EvidenceManifest,
+  EvidenceCheckId,
+  EvidencePackage,
   IntervalAllocation,
   Scenario,
+  VerificationResult,
 } from "../lib/contracts";
 import { DEFAULT_RULES, matchScenario, summarise } from "../lib/energy-engine";
-import { buildEvidence } from "../lib/evidence";
+import { buildEvidencePackage, verifyEvidencePackage } from "../lib/evidence";
+import {
+  type EvidenceFileIssue,
+  type IntervalInclusionResult,
+  createEvidencePackageBlob,
+  evidencePackageFilename,
+  tamperEvidencePackageOneWh,
+  validateEvidenceFileSize,
+  verifyEvidenceFile,
+  verifyEvidenceInterval,
+} from "../lib/evidence-file";
 
 type View = "twin" | "matching" | "summary" | "evidence";
 type ScenarioIndex = { id: string; label: string; description: string; path: string };
-type ProofBundle = {
-  manifest: EvidenceManifest;
-  manifestHash: string;
-  attestation: Attestation;
-  tree: { root: string; levels: string[][] };
+type EvidenceSession = {
+  activePackage: EvidencePackage;
+  originalPackage: EvidencePackage;
+  verification: VerificationResult;
+  inclusion: IntervalInclusionResult;
+  source: "generated" | "imported";
+  tampered: boolean;
+};
+
+type EvidenceOperation = "idle" | "generating" | "reading";
+
+const CHECK_LABELS: Record<EvidenceCheckId, string> = {
+  canonicalIntervalResultHash: "Scenario, allocation and result hashes",
+  merkleRoot: "Recomputed Merkle root",
+  inclusionProofs: "All interval inclusion proofs",
+  manifestHash: "Recomputed manifest hash",
+  attestationBinding: "Attestation binding",
+  scenarioId: "Scenario ID binding",
+  period: "Period and granularity",
+  rule: "Rule ID and version",
+  totals: "Recomputed totals",
 };
 
 const TABS: { id: View; label: string; step: string }[] = [
@@ -67,16 +94,22 @@ function formatPercent(value: number) {
   return `${(value * 100).toFixed(1)}%`;
 }
 
-function shortHash(value: string) {
+function shortHash(value: unknown) {
+  if (typeof value !== "string" || !value.length) return "Unavailable";
   return `${value.slice(0, 10)}…${value.slice(-8)}`;
 }
 
-function localTime(iso: string) {
-  return new Intl.DateTimeFormat("en-GB", {
-    timeZone: "Europe/London",
-    hour: "2-digit",
-    minute: "2-digit",
-  }).format(new Date(iso));
+function localTime(iso: unknown) {
+  if (typeof iso !== "string") return "invalid time";
+  try {
+    return new Intl.DateTimeFormat("en-GB", {
+      timeZone: "Europe/London",
+      hour: "2-digit",
+      minute: "2-digit",
+    }).format(new Date(iso));
+  } catch {
+    return "invalid time";
+  }
 }
 
 function Sparkline({
@@ -338,25 +371,29 @@ function PeriodSummary({
 
 function EvidenceView({
   scenario,
-  proof,
-  generating,
+  session,
+  operation,
+  fileError,
   generateProof,
+  downloadProof,
+  loadProof,
+  toggleTamper,
+  verifySelectedInterval,
 }: {
   scenario: Scenario;
-  proof: ProofBundle | null;
-  generating: boolean;
-  generateProof: () => void;
+  session: EvidenceSession | null;
+  operation: EvidenceOperation;
+  fileError: EvidenceFileIssue | null;
+  generateProof: () => Promise<void>;
+  downloadProof: () => void;
+  loadProof: (file: File) => Promise<void>;
+  toggleTamper: () => Promise<void>;
+  verifySelectedInterval: (leafIndex: number) => Promise<void>;
 }) {
-  const [verifyTamper, setVerifyTamper] = useState(false);
-  const verificationChecks = proof
-    ? [
-        ["Source manifest unchanged", true],
-        ["Scenario data unchanged", true],
-        ["Allocation result unchanged", !verifyTamper],
-        ["Merkle proof valid", !verifyTamper],
-        ["Blockchain anchoring", false],
-      ] as const
-    : [];
+  const evidencePackage = session?.activePackage;
+  const verification = session?.verification;
+  const attestation = evidencePackage?.attestation;
+  const busy = operation !== "idle";
   return (
     <section className="view-stack" aria-labelledby="evidence-title">
       <div className="section-heading">
@@ -365,8 +402,8 @@ function EvidenceView({
           <h2 id="evidence-title">Evidence before claims</h2>
           <p>Every number carries a source class, transformation boundary and quality note.</p>
         </div>
-        <button className="primary-button" onClick={generateProof} disabled={generating}>
-          {generating ? "Building proof…" : proof ? "Rebuild proof" : "Generate demo proof"} <span>→</span>
+        <button className="primary-button" onClick={() => void generateProof()} disabled={busy}>
+          {operation === "generating" ? "Building and verifying…" : session ? "Rebuild proof" : "Generate demo proof"} <span>→</span>
         </button>
       </div>
       <div className="evidence-grid">
@@ -404,35 +441,117 @@ function EvidenceView({
             <span className="proof-mark">GP</span>
             <div><small>GREENPROOF</small><h3>Demonstration attestation</h3></div>
           </div>
-          {proof ? (
+          <div className="evidence-file-actions">
+            <label className="file-button">
+              <span>{operation === "reading" ? "Reading and verifying…" : "Load evidence package"}</span>
+              <input
+                type="file"
+                accept=".json,application/json,application/vnd.greenproof.evidence+json"
+                disabled={busy}
+                onChange={(event) => {
+                  const file = event.currentTarget.files?.[0];
+                  if (file) void loadProof(file);
+                  event.currentTarget.value = "";
+                }}
+              />
+            </label>
+            {session ? (
+              <button className="secondary-button" onClick={downloadProof} disabled={busy}>
+                Download evidence package
+              </button>
+            ) : null}
+          </div>
+          <p className="privacy-note">
+            Files stay in this browser and are not uploaded or saved to the URL. A package contains the full scenario and every interval; real pilot data may be sensitive.
+          </p>
+          {fileError ? (
+            <div className="file-error" role="alert"><strong>{fileError.code}</strong><span>{fileError.message}</span></div>
+          ) : null}
+          {session && attestation && verification ? (
             <>
+              <div className="proof-status" aria-live="polite">
+                <StatusPill tone={verification.valid ? "green" : "amber"}>
+                  {verification.valid ? "VALID · INTERNALLY CONSISTENT" : "INVALID · CHECKS FAILED"}
+                </StatusPill>
+                <small>{session.source === "generated" ? "Generated and verified locally" : "Imported and verified locally"}</small>
+              </div>
               <StatusPill tone="amber">DEMONSTRATION · NOT A CERTIFICATE</StatusPill>
               <dl className="proof-details">
-                <div><dt>Proof ID</dt><dd>{proof.attestation.proofId}</dd></div>
-                <div><dt>Rule</dt><dd>{RULE_LABELS[proof.attestation.ruleId].label}</dd></div>
-                <div><dt>Manifest</dt><dd><code>{shortHash(proof.manifestHash)}</code></dd></div>
-                <div><dt>Merkle root</dt><dd><code>{shortHash(proof.attestation.merkleRoot)}</code></dd></div>
+                <div><dt>Proof ID</dt><dd>{attestation.proofId}</dd></div>
+                <div><dt>Scenario</dt><dd>{evidencePackage.scenario.label}</dd></div>
+                <div><dt>Rule</dt><dd>{RULE_LABELS[attestation.ruleId]?.label ?? attestation.ruleId}</dd></div>
+                <div><dt>Manifest</dt><dd><code>{shortHash(evidencePackage.manifestHash)}</code></dd></div>
+                <div><dt>Merkle root</dt><dd><code>{shortHash(attestation.merkleRoot)}</code></dd></div>
               </dl>
               <div className="verification-list">
-                {verificationChecks.map(([label, valid]) => (
-                  <div key={label}>
-                    <span className={label === "Blockchain anchoring" ? "not-enabled" : valid ? "valid" : "invalid"}>
-                      {label === "Blockchain anchoring" ? "—" : valid ? "✓" : "×"}
-                    </span>
-                    <p>{label}<small>{label === "Blockchain anchoring" ? "Not enabled" : valid ? "Verified locally" : "Failed: content changed"}</small></p>
-                  </div>
-                ))}
+                {(Object.keys(CHECK_LABELS) as EvidenceCheckId[]).map((checkId) => {
+                  const valid = verification.checks[checkId];
+                  return (
+                    <div key={checkId}>
+                      <span className={valid ? "valid" : "invalid"}>
+                        {valid ? "✓" : "×"}
+                      </span>
+                      <p>{CHECK_LABELS[checkId]}<small>{valid ? "Recomputed locally" : "Failed independent verification"}</small></p>
+                    </div>
+                  );
+                })}
+                <div>
+                  <span className="not-enabled">—</span>
+                  <p>Blockchain anchoring<small>Not enabled</small></p>
+                </div>
               </div>
-              <button className="secondary-button" onClick={() => setVerifyTamper((value) => !value)}>
-                {verifyTamper ? "Restore original result" : "Simulate a 1 Wh tamper"}
+              <div className="interval-proof">
+                <label>
+                  <span>Single interval inclusion proof</span>
+                  <select
+                    value={session.inclusion.leafIndex}
+                    onChange={(event) => void verifySelectedInterval(Number(event.target.value))}
+                  >
+                    {evidencePackage.intervals.map((interval, index) => (
+                      <option value={index} key={`${interval?.startUtc ?? "invalid"}-${index}`}>
+                        Leaf {index} · {localTime(interval?.startUtc)}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+                <div>
+                  <span className={session.inclusion.valid ? "valid" : "invalid"}>
+                    {session.inclusion.valid ? "✓" : "×"}
+                  </span>
+                  <p>
+                    Leaf {session.inclusion.leafIndex} · path length {session.inclusion.pathLength}
+                    <small>{session.inclusion.valid ? "Leaf content and nonce recomputed" : session.inclusion.error ?? "Inclusion proof failed"}</small>
+                  </p>
+                </div>
+              </div>
+              {verification.errors.length ? (
+                <div className="issue-block errors" role="alert">
+                  <h4>Verification errors</h4>
+                  <ul>{verification.errors.map((error, index) => (
+                    <li key={`${error.code}-${error.leafIndex ?? "package"}-${index}`}>
+                      <strong>{error.code}</strong><span>{error.message}</span>
+                    </li>
+                  ))}</ul>
+                </div>
+              ) : null}
+              <div className="issue-block warnings">
+                <h4>Trust boundary warnings</h4>
+                <ul>{verification.warnings.map((warning) => (
+                  <li key={warning.code}>
+                    <strong>{warning.code}</strong><span>{warning.message}</span>
+                  </li>
+                ))}</ul>
+              </div>
+              <button className="secondary-button" onClick={() => void toggleTamper()} disabled={busy}>
+                {session.tampered ? "Restore original and verify again" : "Change generation by 1 Wh and verify"}
               </button>
               <button className="text-button" onClick={() => window.print()}>Print demonstration page ↗</button>
             </>
           ) : (
             <div className="proof-empty">
               <span>⌁</span>
-              <p>Generate a local proof to commit this scenario, rule and every interval result to SHA-256 and a Merkle root.</p>
-              <small>No personal data or energy values are sent to a blockchain.</small>
+              <p>Generate a local package or load one from disk. Every check will be recomputed by the independent verifier.</p>
+              <small>No personal data or energy values are sent to a blockchain. No blockchain anchoring is enabled.</small>
             </div>
           )}
         </aside>
@@ -448,8 +567,9 @@ export function GreenProofApp() {
   const [view, setView] = useState<View>(initialView);
   const [timeIndex, setTimeIndex] = useState(initialTimeIndex);
   const [ruleId, setRuleId] = useState<AllocationRuleId>("pro_rata_demand_v1");
-  const [proof, setProof] = useState<ProofBundle | null>(null);
-  const [generating, setGenerating] = useState(false);
+  const [evidenceSession, setEvidenceSession] = useState<EvidenceSession | null>(null);
+  const [evidenceOperation, setEvidenceOperation] = useState<EvidenceOperation>("idle");
+  const [evidenceFileError, setEvidenceFileError] = useState<EvidenceFileIssue | null>(null);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -498,7 +618,8 @@ export function GreenProofApp() {
       .then((data) => {
         setScenario(data);
         setTimeIndex(Math.min(12, data.site.generation.points.length - 1));
-        setProof(null);
+        setEvidenceSession(null);
+        setEvidenceFileError(null);
         syncUrl({ scenario: id, time: 12 });
       })
       .catch((error: Error) => setLoadError(error.message));
@@ -506,12 +627,115 @@ export function GreenProofApp() {
 
   async function generateProof() {
     if (!scenario) return;
-    setGenerating(true);
+    setEvidenceOperation("generating");
+    setEvidenceFileError(null);
     try {
-      setProof(await buildEvidence(scenario, intervals));
+      const evidencePackage = await buildEvidencePackage(scenario, rule);
+      const [verification, inclusion] = await Promise.all([
+        verifyEvidencePackage(evidencePackage),
+        verifyEvidenceInterval(evidencePackage, 0),
+      ]);
+      setEvidenceSession({
+        activePackage: evidencePackage,
+        originalPackage: evidencePackage,
+        verification,
+        inclusion,
+        source: "generated",
+        tampered: false,
+      });
+    } catch (error) {
+      setEvidenceFileError({
+        code: "INVALID_PACKAGE",
+        message: error instanceof Error ? error.message : "The evidence package could not be generated.",
+      });
     } finally {
-      setGenerating(false);
+      setEvidenceOperation("idle");
     }
+  }
+
+  function downloadProof() {
+    if (!evidenceSession) return;
+    const evidencePackage = evidenceSession.originalPackage;
+    const objectUrl = URL.createObjectURL(createEvidencePackageBlob(evidencePackage));
+    const anchor = document.createElement("a");
+    try {
+      anchor.href = objectUrl;
+      anchor.download = evidencePackageFilename(evidencePackage);
+      anchor.hidden = true;
+      document.body.append(anchor);
+      anchor.click();
+    } finally {
+      anchor.remove();
+      URL.revokeObjectURL(objectUrl);
+    }
+  }
+
+  async function loadProof(file: File) {
+    setEvidenceOperation("reading");
+    setEvidenceFileError(null);
+    try {
+      const sizeIssue = validateEvidenceFileSize(file.size);
+      if (sizeIssue) {
+        setEvidenceFileError(sizeIssue);
+        return;
+      }
+      const loaded = await verifyEvidenceFile(await file.text(), file.size);
+      if (!loaded.ok) {
+        setEvidenceFileError(loaded.error);
+        return;
+      }
+      const inclusion = await verifyEvidenceInterval(loaded.evidencePackage, 0);
+      setEvidenceSession({
+        activePackage: loaded.evidencePackage,
+        originalPackage: loaded.evidencePackage,
+        verification: loaded.verification,
+        inclusion,
+        source: "imported",
+        tampered: false,
+      });
+    } catch (error) {
+      setEvidenceFileError({
+        code: "INVALID_PACKAGE",
+        message: error instanceof Error ? error.message : "The evidence file could not be read.",
+      });
+    } finally {
+      setEvidenceOperation("idle");
+    }
+  }
+
+  async function toggleTamper() {
+    if (!evidenceSession) return;
+    setEvidenceOperation("generating");
+    setEvidenceFileError(null);
+    try {
+      const activePackage = evidenceSession.tampered
+        ? evidenceSession.originalPackage
+        : tamperEvidencePackageOneWh(evidenceSession.originalPackage);
+      const [verification, inclusion] = await Promise.all([
+        verifyEvidencePackage(activePackage),
+        verifyEvidenceInterval(activePackage, evidenceSession.inclusion.leafIndex),
+      ]);
+      setEvidenceSession({
+        ...evidenceSession,
+        activePackage,
+        verification,
+        inclusion,
+        tampered: !evidenceSession.tampered,
+      });
+    } catch (error) {
+      setEvidenceFileError({
+        code: "INVALID_PACKAGE",
+        message: error instanceof Error ? error.message : "The tamper demonstration could not run.",
+      });
+    } finally {
+      setEvidenceOperation("idle");
+    }
+  }
+
+  async function verifySelectedInterval(leafIndex: number) {
+    if (!evidenceSession) return;
+    const inclusion = await verifyEvidenceInterval(evidenceSession.activePackage, leafIndex);
+    setEvidenceSession((current) => current ? { ...current, inclusion } : current);
   }
 
   if (loadError) {
@@ -568,7 +792,7 @@ export function GreenProofApp() {
           </div>
           <label>
             <span>Allocation rule</span>
-            <select value={ruleId} onChange={(event) => { setRuleId(event.target.value as AllocationRuleId); setProof(null); }}>
+            <select value={ruleId} onChange={(event) => { setRuleId(event.target.value as AllocationRuleId); setEvidenceSession(null); setEvidenceFileError(null); }}>
               {DEFAULT_RULES.map((item) => <option value={item.id} key={item.id}>{RULE_LABELS[item.id].label}</option>)}
             </select>
           </label>
@@ -577,7 +801,19 @@ export function GreenProofApp() {
         {view === "twin" ? <SiteTwin scenario={scenario} intervals={intervals} index={safeTimeIndex} setIndex={(value) => { setTimeIndex(value); syncUrl({ time: value }); }} /> : null}
         {view === "matching" ? <DailyMatching scenario={scenario} intervals={intervals} index={safeTimeIndex} setIndex={(value) => { setTimeIndex(value); syncUrl({ time: value }); }} /> : null}
         {view === "summary" ? <PeriodSummary scenario={scenario} intervals={intervals} /> : null}
-        {view === "evidence" ? <EvidenceView scenario={scenario} proof={proof} generating={generating} generateProof={generateProof} /> : null}
+        {view === "evidence" ? (
+          <EvidenceView
+            scenario={scenario}
+            session={evidenceSession}
+            operation={evidenceOperation}
+            fileError={evidenceFileError}
+            generateProof={generateProof}
+            downloadProof={downloadProof}
+            loadProof={loadProof}
+            toggleTamper={toggleTamper}
+            verifySelectedInterval={verifySelectedInterval}
+          />
+        ) : null}
       </div>
       <footer>
         <p>GreenProof MVP · Objective facts, explicit assumptions, reproducible allocation.</p>

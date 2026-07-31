@@ -177,6 +177,16 @@ input[type="range"] { width: 100%; accent-color: var(--green); cursor: pointer; 
 .proof-mark { width: 36px; height: 36px; display: grid; place-items: center; border-radius: 50%; border: 1px solid var(--solar); color: var(--solar); font-weight: 900; font-size: 11px; }
 .proof-heading small { color: var(--solar); font-size: 8px; letter-spacing: .15em; }
 .proof-heading h3 { font-family: Georgia,serif; font-size: 19px; font-weight: 500; margin: 3px 0; }
+.evidence-file-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.file-button { min-height: 38px; border: 1px solid #778a84; border-radius: 5px; display: grid; place-items: center; padding: 9px 12px; cursor: pointer; color: #eef6f2; text-align: center; }
+.file-button > span { color: inherit; font-size: 10px; letter-spacing: 0; text-transform: none; }
+.file-button:has(input:disabled) { opacity: .6; cursor: wait; }
+.file-button input { position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
+.privacy-note { margin: 0; color: #a7b6b1; font-size: 9px; line-height: 1.55; }
+.file-error { border: 1px solid #b26767; background: #411f1f; color: #ffdede; border-radius: 6px; padding: 10px 12px; display: grid; gap: 4px; font-size: 9px; }
+.file-error strong { letter-spacing: .08em; }
+.proof-status { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+.proof-status > small { color: #a7b6b1; font-size: 8px; text-align: right; }
 .proof-details { margin: 0; display: grid; gap: 9px; }
 .proof-details div { display: flex; justify-content: space-between; gap: 15px; border-bottom: 1px solid rgba(255,255,255,.1); padding-bottom: 8px; font-size: 10px; }
 .proof-details dt { color: #a7b6b1; }
@@ -189,6 +199,23 @@ input[type="range"] { width: 100%; accent-color: var(--green); cursor: pointer; 
 .verification-list .not-enabled { border: 1px solid #61716c; color: #9bacA7; }
 .verification-list p { margin: 0; display: grid; font-size: 10px; }
 .verification-list small { color: #9dacA7; font-size: 8px; margin-top: 2px; }
+.interval-proof { border-top: 1px solid rgba(255,255,255,.13); border-bottom: 1px solid rgba(255,255,255,.13); padding: 13px 0; display: grid; gap: 12px; }
+.interval-proof select { color: white; border-color: #71817c; width: 100%; min-width: 0; }
+.interval-proof option { color: var(--ink); }
+.interval-proof > div { display: flex; align-items: center; gap: 9px; }
+.interval-proof > div > span { width: 22px; height: 22px; flex: 0 0 22px; border-radius: 50%; display: grid; place-items: center; font-size: 11px; }
+.interval-proof > div > span.valid { background: #215f50; color: #b8ffdc; }
+.interval-proof > div > span.invalid { background: #7c2d2d; color: #ffd2d2; }
+.interval-proof p { margin: 0; display: grid; font-size: 10px; }
+.interval-proof small { color: #9dacA7; font-size: 8px; margin-top: 2px; }
+.issue-block { border-radius: 6px; padding: 12px; }
+.issue-block.errors { background: #411f1f; border: 1px solid #8f4f4f; }
+.issue-block.warnings { background: #2c3721; border: 1px solid #687449; }
+.issue-block h4 { margin: 0 0 8px; font-size: 10px; text-transform: uppercase; letter-spacing: .08em; }
+.issue-block ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 9px; }
+.issue-block li { display: grid; gap: 2px; font-size: 8px; line-height: 1.45; }
+.issue-block li strong { overflow-wrap: anywhere; }
+.issue-block li span { color: #c0cbc7; }
 .proof-empty { min-height: 280px; display: grid; place-items: center; align-content: center; text-align: center; color: #b2c0bc; }
 .proof-empty > span { font-size: 36px; color: var(--solar); }
 .proof-empty p { line-height: 1.55; font-size: 12px; }
@@ -241,6 +268,9 @@ footer { border-top: 1px solid var(--line); padding: 18px clamp(18px,4vw,64px); 
   .share-ring { justify-self: center; }
   .tenant-summary dl { grid-column: 1; }
   .source-card summary > div { align-items: start; flex-direction: column; }
+  .evidence-file-actions { grid-template-columns: 1fr; }
+  .proof-status { align-items: start; flex-direction: column; }
+  .proof-status > small { text-align: left; }
   footer { display: grid; }
 }
 

@@ -50,7 +50,9 @@ next-env.d.ts
 *.tsbuildinfo
 /dist/
 /.wrangler/
-/outputs/
+/outputs/*
+!/outputs/greenproof-mvp-codex-prompts/
+!/outputs/greenproof-mvp-codex-prompts/**
 /work/
 
 # python
