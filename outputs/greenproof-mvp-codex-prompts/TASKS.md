@@ -36,8 +36,8 @@
   - 产出：本地下载/导入、真实 VerificationResult、1 Wh 篡改、单叶证明
   - 加固：06、07、08
 
-- [ ] 12 Sites-compatible Pilot 私有预览
-  - 当前：Prompt 已创建，待执行
+- [x] 12 Sites-compatible Pilot 私有预览
+  - 当前：本地兼容候选与 Codex 浏览器预览已完成；Sites 私有保存版本待检查点获批后执行
   - 产出：3B 检查点、Sites-compatible 构建、本地可调试网页、可选私有保存版本
   - 边界：不公开发布、不部署 Cloudflare
 

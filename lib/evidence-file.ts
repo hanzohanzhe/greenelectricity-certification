@@ -13,6 +13,7 @@ export const EVIDENCE_PACKAGE_MIME_TYPE = "application/vnd.greenproof.evidence+j
 export const MAX_EVIDENCE_PACKAGE_BYTES = 5 * 1024 * 1024;
 
 export type EvidenceFileErrorCode =
+  | "DOWNLOAD_FAILED"
   | "EMPTY_FILE"
   | "FILE_TOO_LARGE"
   | "INVALID_FILE_SIZE"

@@ -656,17 +656,25 @@ export function GreenProofApp() {
   function downloadProof() {
     if (!evidenceSession) return;
     const evidencePackage = evidenceSession.originalPackage;
-    const objectUrl = URL.createObjectURL(createEvidencePackageBlob(evidencePackage));
-    const anchor = document.createElement("a");
+    let objectUrl = "";
+    let anchor: HTMLAnchorElement | null = null;
+    setEvidenceFileError(null);
     try {
+      objectUrl = URL.createObjectURL(createEvidencePackageBlob(evidencePackage));
+      anchor = document.createElement("a");
       anchor.href = objectUrl;
       anchor.download = evidencePackageFilename(evidencePackage);
       anchor.hidden = true;
       document.body.append(anchor);
       anchor.click();
+    } catch (error) {
+      setEvidenceFileError({
+        code: "DOWNLOAD_FAILED",
+        message: error instanceof Error ? error.message : "This browser could not create the evidence download.",
+      });
     } finally {
-      anchor.remove();
-      URL.revokeObjectURL(objectUrl);
+      anchor?.remove();
+      if (objectUrl) URL.revokeObjectURL(objectUrl);
     }
   }
 
