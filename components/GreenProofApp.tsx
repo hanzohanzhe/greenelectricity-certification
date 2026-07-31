@@ -241,6 +241,7 @@ function SiteTwin({
                     <small>{tenant.label}</small>
                     <strong>{formatPower(point.energyWh, scenario.granularityMinutes)}</strong>
                     <p>{formatEnergy(interval.tenantGridImportWh[tenant.id])} from grid</p>
+                    <em>Pilot-scaled profile</em>
                   </div>
                   <span className="inspect-hint">Inspect ↓</span>
                 </button>
