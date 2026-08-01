@@ -6,8 +6,8 @@
 2. **0:30–1:10 — Move through the day.** In Site Twin, drag from night to noon.
    Show grid import before sunrise, simultaneous rooftop allocation, then any
    midday export.
-3. **1:10–1:40 — Explain the rule.** Switch from pro-rata to Tenant A priority
-   and 60/40 contract. The physical totals stay fixed; only tenant attribution
+3. **1:10–1:40 — Explain the rule.** Switch from pro-rata to sequential priority
+   and equal entitlement. The physical totals stay fixed; only user attribution
    changes.
 4. **1:40–2:10 — Reconcile the period.** Open Period Summary. Compare total
    generation, onsite use, export and each tenant's same-interval local share.

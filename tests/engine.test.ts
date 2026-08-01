@@ -54,16 +54,15 @@ function scenario(generation: number[], demandA: number[], demandB: number[]): S
 function assertConservation(input: Scenario, rule: AllocationRule) {
   const output = matchScenario(input, rule);
   output.forEach((interval, index) => {
-    const a = interval.tenantAllocationsWh["tenant-a"];
-    const b = interval.tenantAllocationsWh["tenant-b"];
-    assert.equal(a + b, interval.onsiteMatchedWh);
+    assert.equal(Object.values(interval.tenantAllocationsWh).reduce((sum, value) => sum + value, 0), interval.onsiteMatchedWh);
     assert.equal(interval.onsiteMatchedWh + interval.exportWh, interval.generationWh);
     assert.equal(
-      interval.tenantGridImportWh["tenant-a"] + interval.tenantGridImportWh["tenant-b"],
+      Object.values(interval.tenantGridImportWh).reduce((sum, value) => sum + value, 0),
       interval.gridImportWh,
     );
-    assert.ok(a <= input.site.tenants[0].demand.points[index].energyWh);
-    assert.ok(b <= input.site.tenants[1].demand.points[index].energyWh);
+    input.site.tenants.forEach((tenant) => {
+      assert.ok(interval.tenantAllocationsWh[tenant.id] <= tenant.demand.points[index].energyWh);
+    });
     Object.values(interval).forEach((value) => {
       if (typeof value === "number") assert.ok(value >= 0);
     });

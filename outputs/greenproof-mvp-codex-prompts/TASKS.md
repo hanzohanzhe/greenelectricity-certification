@@ -47,6 +47,10 @@
   - 在 Codex 内置浏览器中与用户共同调试内容、交互、移动端和三分钟演示路径
 - [ ] 14 Cloudflare Pilot 正式部署
   - 前端定稿后部署 Workers/Pages，配置域名、安全、缓存、监控和费用边界
+- [x] 15 八用户 100 kW 屋顶光伏配电数字孪生
+  - 需求文档：`docs/pilot/future-development-requirements.md`
+  - 当前：本地实现完成，等待人工评审；按要求未部署、未推送
+  - 产出：8 个约 10 kW 峰值的差异化负荷、100 kW 峰值光伏、典型配电拓扑、节点钻取、8 用户 Evidence 兼容
 
 ## 可选路径
 

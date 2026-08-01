@@ -152,6 +152,96 @@ export function summarise(scenario: Scenario, intervals: IntervalAllocation[]) {
   };
 }
 
+export interface TenantGreenShortfallExplanation {
+  tenantId: string;
+  unmetWh: number;
+  noGenerationWh: number;
+  simultaneousSiteShortageWh: number;
+  competingAllocationWh: number;
+  competingIntervalCount: number;
+  peak: {
+    startUtc: string;
+    generationWh: number;
+    totalDemandWh: number;
+    tenantDemandWh: number;
+    tenantAllocationWh: number;
+    exportWh: number;
+    generationCouldMeetTenant: boolean;
+    generationExceedsAllDemand: boolean;
+  };
+  ruleId: AllocationRule["id"];
+  ruleVersion: string;
+}
+
+/**
+ * Recomputes an explanatory breakdown from interval facts. The categories are
+ * mutually exclusive and sum to the tenant's grid-supplied balance. A period
+ * peak or exported surplus cannot be moved to another interval under same-time
+ * matching, so peak abundance is reported separately from the shortfall causes.
+ */
+export function explainTenantGreenShortfall(
+  scenario: Scenario,
+  intervals: IntervalAllocation[],
+  tenantId: string,
+): TenantGreenShortfallExplanation {
+  const tenant = scenario.site.tenants.find((item) => item.id === tenantId);
+  if (!tenant) throw new Error(`Unknown tenant: ${tenantId}`);
+  if (!intervals.length || intervals.length !== tenant.demand.points.length) {
+    throw new Error("Intervals must align with the tenant demand series");
+  }
+
+  let unmetWh = 0;
+  let noGenerationWh = 0;
+  let simultaneousSiteShortageWh = 0;
+  let competingAllocationWh = 0;
+  let competingIntervalCount = 0;
+
+  intervals.forEach((interval, index) => {
+    const demandWh = tenant.demand.points[index].energyWh;
+    const allocationWh = interval.tenantAllocationsWh[tenantId];
+    const intervalUnmetWh = demandWh - allocationWh;
+    if (intervalUnmetWh <= 0) return;
+    unmetWh += intervalUnmetWh;
+    if (interval.generationWh === 0) {
+      noGenerationWh += intervalUnmetWh;
+    } else if (interval.generationWh >= demandWh && interval.onsiteMatchedWh > allocationWh) {
+      competingAllocationWh += intervalUnmetWh;
+      competingIntervalCount += 1;
+    } else {
+      simultaneousSiteShortageWh += intervalUnmetWh;
+    }
+  });
+
+  const peakIndex = intervals.reduce(
+    (bestIndex, interval, index) =>
+      interval.generationWh > intervals[bestIndex].generationWh ? index : bestIndex,
+    0,
+  );
+  const peakInterval = intervals[peakIndex];
+  const peakTenantDemandWh = tenant.demand.points[peakIndex].energyWh;
+
+  return {
+    tenantId,
+    unmetWh,
+    noGenerationWh,
+    simultaneousSiteShortageWh,
+    competingAllocationWh,
+    competingIntervalCount,
+    peak: {
+      startUtc: peakInterval.startUtc,
+      generationWh: peakInterval.generationWh,
+      totalDemandWh: peakInterval.totalDemandWh,
+      tenantDemandWh: peakTenantDemandWh,
+      tenantAllocationWh: peakInterval.tenantAllocationsWh[tenantId],
+      exportWh: peakInterval.exportWh,
+      generationCouldMeetTenant: peakInterval.generationWh >= peakTenantDemandWh,
+      generationExceedsAllDemand: peakInterval.generationWh > peakInterval.totalDemandWh,
+    },
+    ruleId: peakInterval.ruleId,
+    ruleVersion: peakInterval.ruleVersion,
+  };
+}
+
 export const DEFAULT_RULES: AllocationRule[] = [
   { id: "pro_rata_demand_v1", version: "1.0.0" },
   { id: "priority_v1", version: "1.0.0", priority: ["tenant-a", "tenant-b"] },

@@ -182,13 +182,14 @@ export async function verifyMerkleProof(
 function allocationRuleFromIntervals(intervals: IntervalAllocation[]): AllocationRule {
   if (!intervals.length) throw new Error("Evidence requires at least one interval");
   const id = intervals[0].ruleId;
+  const tenantIds = Object.keys(intervals[0].tenantAllocationsWh);
   return {
     id,
     version: "1.0.0",
     ...(id === "priority_v1"
-      ? { priority: ["tenant-a", "tenant-b"] }
+      ? { priority: tenantIds }
       : id === "contract_share_v1"
-        ? { shares: { "tenant-a": 0.6, "tenant-b": 0.4 } }
+        ? { shares: Object.fromEntries(tenantIds.map((tenantId) => [tenantId, 1])) }
         : {}),
   };
 }

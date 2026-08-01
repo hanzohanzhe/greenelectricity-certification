@@ -93,7 +93,7 @@ test("single-interval helper recomputes inclusion proof from content and nonce",
 
 test("Evidence UI is wired to package generation, independent verification and real tampering", async () => {
   const source = await readFile(new URL("../components/GreenProofApp.tsx", import.meta.url), "utf8");
-  assert.match(source, /buildEvidencePackage\(scenario, rule\)/);
+  assert.match(source, /buildEvidencePackage\(evidenceScenario, rule\)/);
   assert.match(source, /verifyEvidencePackage\(evidencePackage\)/);
   assert.match(source, /verification\.checks\[checkId\]/);
   assert.match(source, /tamperEvidencePackageOneWh\(evidenceSession\.originalPackage\)/);

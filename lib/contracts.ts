@@ -203,8 +203,12 @@ export function validatePoint(point: TimeSeriesPoint): void {
 }
 
 export function validateScenario(scenario: Scenario): void {
-  if (scenario.site.tenants.length !== 2) {
-    throw new Error("MVP scenarios require exactly two tenants");
+  if (scenario.site.tenants.length < 1 || scenario.site.tenants.length > 32) {
+    throw new Error("Scenarios require between 1 and 32 tenants");
+  }
+  const tenantIds = scenario.site.tenants.map((tenant) => tenant.id);
+  if (new Set(tenantIds).size !== tenantIds.length) {
+    throw new Error("Tenant IDs must be unique");
   }
   const series = [
     scenario.site.generation.points,
