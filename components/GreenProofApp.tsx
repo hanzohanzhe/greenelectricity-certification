@@ -652,7 +652,7 @@ function PpaContractView({
               <label key={tenant.id}>
                 <span className="tenant-marker">{String.fromCharCode(65 + index)}</span>
                 <div><strong>{tenant.label}</strong><input aria-label={`${tenant.label} generation share`} type="range" min="0" max="100" step="0.5" value={draft.tenantSharesPercent[tenant.id] ?? 0} onChange={(event) => updateShare(tenant.id, Number(event.target.value))} /></div>
-                <div className="input-suffix share-input"><input aria-label={`${tenant.label} generation share percent`} type="number" min="0" max="100" step="0.5" value={draft.tenantSharesPercent[tenant.id] ?? 0} onChange={(event) => updateShare(tenant.id, Number(event.target.value))} /><i>%</i></div>
+                <div className="input-suffix share-input"><input aria-label={`${tenant.label} generation share percent`} type="text" inputMode="decimal" value={draft.tenantSharesPercent[tenant.id] ?? 0} onChange={(event) => updateShare(tenant.id, Number(event.target.value))} /><i>%</i></div>
               </label>
             ))}
           </div>

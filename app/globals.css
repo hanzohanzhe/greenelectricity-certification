@@ -259,11 +259,11 @@ input[type="range"] { width: 100%; accent-color: var(--green); cursor: pointer; 
 .input-suffix i { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); color: var(--muted); font-size: 9px; font-style: normal; font-weight: 800; }
 .ppa-helper { margin: -5px 0 16px; color: var(--muted); font-size: 10px; line-height: 1.55; }
 .share-editor { display: grid; gap: 7px; }
-.share-editor > label { grid-template-columns: 28px 1fr 82px; align-items: center; gap: 10px; border-top: 1px solid #edf0ee; padding-top: 8px; }
+.share-editor > label { grid-template-columns: 28px minmax(0,1fr) 104px; align-items: center; gap: 10px; border-top: 1px solid #edf0ee; padding-top: 8px; }
 .share-editor > label > div:nth-child(2) { display: grid; gap: 6px; min-width: 0; }
 .share-editor > label > div > strong { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 10px; }
 .share-editor .tenant-marker { width: 27px; height: 27px; }
-.share-input input { padding-block: 7px; }
+.share-input input { padding: 7px 30px 7px 11px; font-variant-numeric: tabular-nums; }
 .model-translation { display: grid; gap: 14px; }
 .model-translation .ppa-card-heading,.contract-impact .ppa-card-heading { margin-bottom: 0; }
 .model-translation dl { margin: 0; display: grid; }
@@ -424,7 +424,7 @@ footer { border-top: 1px solid var(--line); padding: 18px clamp(18px,4vw,64px); 
   .tenant-summary { grid-template-columns: 1fr; }
   .ppa-field-grid { grid-template-columns: 1fr; }
   .ppa-field-grid .wide-field { grid-column: 1; }
-  .share-editor > label { grid-template-columns: 28px 1fr 72px; }
+  .share-editor > label { grid-template-columns: 28px minmax(0,1fr) 92px; }
   .share-ring { justify-self: center; }
   .tenant-summary dl { grid-column: 1; }
   .source-card summary > div { align-items: start; flex-direction: column; }
