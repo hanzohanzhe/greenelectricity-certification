@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import type {
+  AllocationRule,
   AllocationRuleId,
   EvidenceCheckId,
   EvidencePackage,
@@ -19,6 +20,10 @@ import {
 import { buildEvidencePackage, verifyEvidencePackage } from "../lib/evidence";
 import { preparePilotScenario } from "../lib/pilot-scenario";
 import {
+  type PpaContractDraft,
+  convertPpaContract,
+} from "../lib/ppa-contract";
+import {
   type EvidenceFileIssue,
   type IntervalInclusionResult,
   createEvidencePackageBlob,
@@ -29,7 +34,7 @@ import {
   verifyEvidenceInterval,
 } from "../lib/evidence-file";
 
-type View = "twin" | "matching" | "summary" | "evidence";
+type View = "twin" | "matching" | "contract" | "summary" | "evidence";
 type AnalysisScope = "year" | "month" | "day";
 type ScenarioIndex = { id: string; label: string; description: string; path: string };
 type EvidenceSession = {
@@ -58,9 +63,18 @@ const CHECK_LABELS: Record<EvidenceCheckId, string> = {
 const TABS: { id: View; label: string; step: string }[] = [
   { id: "twin", label: "Site twin", step: "01" },
   { id: "matching", label: "Daily matching", step: "02" },
-  { id: "summary", label: "Period summary", step: "03" },
-  { id: "evidence", label: "Evidence", step: "04" },
+  { id: "contract", label: "PPA contract", step: "03" },
+  { id: "summary", label: "Period summary", step: "04" },
+  { id: "evidence", label: "Evidence", step: "05" },
 ];
+
+const CERTIFICATE_LABELS: Record<PpaContractDraft["certificateTreatment"], string> = {
+  not_issued: "No certificate issued",
+  included_with_tenant: "Certificate included with tenant entitlement",
+  retained_by_owner: "Certificate retained by owner",
+  sold_separately: "Certificate sold separately",
+  unknown: "Certificate status unknown",
+};
 
 const RULE_LABELS: Record<AllocationRuleId, { label: string; note: string }> = {
   pro_rata_demand_v1: {
@@ -72,8 +86,8 @@ const RULE_LABELS: Record<AllocationRuleId, { label: string; note: string }> = {
     note: "Users are served in the displayed A–H order until the interval's rooftop electricity is exhausted.",
   },
   contract_share_v1: {
-    label: "Equal entitlement",
-    note: "Each user starts with an equal contract weight; unused electricity is redistributed to users with remaining demand.",
+    label: "PPA contract shares",
+    note: "Each user starts with its applied PPA generation share; unused entitlement is redistributed to users with remaining same-interval demand.",
   },
 };
 
@@ -140,6 +154,28 @@ function sliceScenario(scenario: Scenario, predicate: (point: Scenario["site"]["
     },
   };
 }
+
+const DEFAULT_PPA_SHARES_PERCENT: Record<string, number> = {
+  "tenant-a": 20,
+  "tenant-b": 15,
+  "tenant-c": 15,
+  "tenant-d": 12.5,
+  "tenant-e": 12.5,
+  "tenant-f": 10,
+  "tenant-g": 10,
+  "tenant-h": 5,
+};
+
+const DEFAULT_PPA_DRAFT: PpaContractDraft = {
+  reference: "CAM-ROOF-PPA-DEMO-001",
+  effectiveFrom: "2022-01-01",
+  effectiveTo: "2023-01-01",
+  pricePencePerKwh: 14.5,
+  allocationBasis: "same_interval_generation_share",
+  unusedEntitlement: "redistribute_to_active_loads",
+  certificateTreatment: "retained_by_owner",
+  tenantSharesPercent: DEFAULT_PPA_SHARES_PERCENT,
+};
 
 function Sparkline({
   values,
@@ -509,6 +545,109 @@ function PeriodSummary({
   );
 }
 
+function PpaContractView({
+  scenario,
+  draft,
+  setDraft,
+  applyContract,
+  activeContractReference,
+}: {
+  scenario: Scenario;
+  draft: PpaContractDraft;
+  setDraft: (draft: PpaContractDraft) => void;
+  applyContract: (rule: AllocationRule) => void;
+  activeContractReference: string | null;
+}) {
+  const conversion = useMemo(() => convertPpaContract(scenario, draft), [draft, scenario]);
+  const impact = useMemo(() => {
+    if (!conversion.allocationRule) return null;
+    return summarise(scenario, matchScenario(scenario, conversion.allocationRule));
+  }, [conversion.allocationRule, scenario]);
+
+  function updateShare(tenantId: string, value: number) {
+    setDraft({
+      ...draft,
+      tenantSharesPercent: { ...draft.tenantSharesPercent, [tenantId]: value },
+    });
+  }
+
+  return (
+    <section className="view-stack" aria-labelledby="ppa-title">
+      <div className="section-heading">
+        <div>
+          <span className="eyebrow">Contract-to-model demonstration</span>
+          <h2 id="ppa-title">Turn a rooftop PPA into auditable allocation parameters</h2>
+          <p>This is a session-local modelling tool, not a signed contract. Commercial terms are separated from the fields that change GreenProof calculations.</p>
+        </div>
+        <StatusPill tone={activeContractReference === draft.reference ? "green" : "amber"}>
+          {activeContractReference === draft.reference ? "APPLIED TO MODEL" : "DRAFT · NOT APPLIED"}
+        </StatusPill>
+      </div>
+
+      <div className="ppa-grid">
+        <div className="ppa-form-card">
+          <div className="ppa-card-heading"><span>01</span><div><small>COMMERCIAL SOURCE</small><h3>Key PPA terms</h3></div></div>
+          <div className="ppa-field-grid">
+            <label><span>Contract reference</span><input value={draft.reference} onChange={(event) => setDraft({ ...draft, reference: event.target.value })} /></label>
+            <label><span>Energy price</span><div className="input-suffix"><input type="number" min="0" step="0.1" value={draft.pricePencePerKwh} onChange={(event) => setDraft({ ...draft, pricePencePerKwh: Number(event.target.value) })} /><i>p/kWh</i></div></label>
+            <label><span>Effective from</span><input type="date" value={draft.effectiveFrom} onChange={(event) => setDraft({ ...draft, effectiveFrom: event.target.value })} /></label>
+            <label><span>Effective to</span><input type="date" value={draft.effectiveTo} onChange={(event) => setDraft({ ...draft, effectiveTo: event.target.value })} /></label>
+            <label className="wide-field"><span>Allocation basis</span><select value={draft.allocationBasis} disabled><option value="same_interval_generation_share">Fixed share of same-interval rooftop generation</option></select><small>Converted to contract_share_v1; every allocation remains capped by that tenant&apos;s simultaneous demand.</small></label>
+            <label className="wide-field"><span>Unused entitlement</span><select value={draft.unusedEntitlement} disabled><option value="redistribute_to_active_loads">Redistribute to users with remaining same-interval demand</option></select><small>The current engine conserves every on-site Wh by redistributing unused shares before any genuine excess is exported.</small></label>
+            <label className="wide-field"><span>Associated green certificate disclosure</span><select value={draft.certificateTreatment} onChange={(event) => setDraft({ ...draft, certificateTreatment: event.target.value as PpaContractDraft["certificateTreatment"] })}>
+              {(Object.keys(CERTIFICATE_LABELS) as PpaContractDraft["certificateTreatment"][]).map((item) => <option value={item} key={item}>{CERTIFICATE_LABELS[item]}</option>)}
+            </select><small>This disclosure does not change the measured fact of local, same-interval rooftop consumption.</small></label>
+          </div>
+        </div>
+
+        <div className="ppa-form-card">
+          <div className="ppa-card-heading"><span>02</span><div><small>GENERATION ENTITLEMENT</small><h3>Tenant shares</h3></div><strong className={Math.abs(conversion.totalSharePercent - 100) < 0.001 ? "share-valid" : "share-invalid"}>{conversion.totalSharePercent.toFixed(1)}%</strong></div>
+          <p className="ppa-helper">A share is applied to rooftop generation in each interval. A user can only certify the smaller of its entitlement and its actual load; unused entitlement is redistributed under the selected rule.</p>
+          <div className="share-editor">
+            {scenario.site.tenants.map((tenant, index) => (
+              <label key={tenant.id}>
+                <span className="tenant-marker">{String.fromCharCode(65 + index)}</span>
+                <div><strong>{tenant.label}</strong><input aria-label={`${tenant.label} generation share`} type="range" min="0" max="100" step="0.5" value={draft.tenantSharesPercent[tenant.id] ?? 0} onChange={(event) => updateShare(tenant.id, Number(event.target.value))} /></div>
+                <div className="input-suffix share-input"><input aria-label={`${tenant.label} generation share percent`} type="number" min="0" max="100" step="0.5" value={draft.tenantSharesPercent[tenant.id] ?? 0} onChange={(event) => updateShare(tenant.id, Number(event.target.value))} /><i>%</i></div>
+              </label>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <div className="ppa-output-grid">
+        <article className="model-translation">
+          <div className="ppa-card-heading"><span>03</span><div><small>MODEL TRANSLATION</small><h3>Executable GreenProof parameters</h3></div></div>
+          <dl>
+            <div><dt>Rule</dt><dd><code>contract_share_v1@1.0.0</code></dd></div>
+            <div><dt>Settlement interval</dt><dd>{scenario.granularityMinutes} minutes</dd></div>
+            <div><dt>Tenant cap</dt><dd>Actual same-interval demand</dd></div>
+            <div><dt>Site cap</dt><dd>Same-interval onsite matched generation</dd></div>
+            <div><dt>Certificate disclosure</dt><dd>{CERTIFICATE_LABELS[draft.certificateTreatment]}</dd></div>
+          </dl>
+          <pre>{JSON.stringify(conversion.allocationRule ?? { errors: conversion.errors }, null, 2)}</pre>
+          {conversion.errors.length ? <div className="contract-errors" role="alert">{conversion.errors.map((error) => <span key={error}>{error}</span>)}</div> : null}
+          <button className="primary-button" disabled={!conversion.allocationRule} onClick={() => conversion.allocationRule && applyContract(conversion.allocationRule)}>
+            Apply contract shares to simulation <span>→</span>
+          </button>
+          <p className="privacy-note">Evidence packages bind the applied rule and tenant shares. Contract reference, price and certificate disclosure remain demonstration metadata in this MVP and are not yet signed or embedded in EvidencePackage.</p>
+        </article>
+
+        <article className="contract-impact">
+          <div className="ppa-card-heading"><span>04</span><div><small>FORECAST IMPACT</small><h3>What these shares produce</h3></div></div>
+          {impact ? (
+            <div className="impact-list">
+              {scenario.site.tenants.map((tenant, index) => (
+                <div key={tenant.id}><span><i>{String.fromCharCode(65 + index)}</i>{tenant.label}</span><strong>{formatPercent(impact.tenantGreenShare[tenant.id])}</strong><small>{formatEnergy(impact.tenantAllocationWh[tenant.id])} locally matched</small></div>
+              ))}
+            </div>
+          ) : <p>Resolve the contract errors to preview its allocation impact.</p>}
+        </article>
+      </div>
+    </section>
+  );
+}
+
 function EvidenceView({
   scenario,
   session,
@@ -708,6 +847,11 @@ export function GreenProofApp() {
   const [timeIndex, setTimeIndex] = useState(initialTimeIndex);
   const [ruleId, setRuleId] = useState<AllocationRuleId>("pro_rata_demand_v1");
   const [selectedTenantId, setSelectedTenantId] = useState("tenant-a");
+  const [ppaDraft, setPpaDraft] = useState<PpaContractDraft>(DEFAULT_PPA_DRAFT);
+  const [contractShares, setContractShares] = useState<Record<string, number>>(
+    Object.fromEntries(Object.entries(DEFAULT_PPA_SHARES_PERCENT).map(([id, share]) => [id, share / 100])),
+  );
+  const [activeContractReference, setActiveContractReference] = useState<string | null>(null);
   const [analysisScope, setAnalysisScope] = useState<AnalysisScope>("year");
   const [selectedMonth, setSelectedMonth] = useState("");
   const [selectedDate, setSelectedDate] = useState("");
@@ -748,10 +892,10 @@ export function GreenProofApp() {
     const tenantIds = scenario.site.tenants.map((tenant) => tenant.id);
     if (baseRule.id === "priority_v1") return { ...baseRule, priority: tenantIds };
     if (baseRule.id === "contract_share_v1") {
-      return { ...baseRule, shares: Object.fromEntries(tenantIds.map((id) => [id, 1])) };
+      return { ...baseRule, shares: Object.fromEntries(tenantIds.map((id) => [id, contractShares[id] ?? 0])) };
     }
     return baseRule;
-  }, [ruleId, scenario]);
+  }, [contractShares, ruleId, scenario]);
   const availableMonths = useMemo(() => scenario
     ? [...new Set(scenario.site.generation.points.map((point) => monthKey(point.startUtc)))]
     : [], [scenario]);
@@ -931,6 +1075,15 @@ export function GreenProofApp() {
     setEvidenceSession((current) => current ? { ...current, inclusion } : current);
   }
 
+  function applyPpaContract(contractRule: AllocationRule) {
+    if (!contractRule.shares) return;
+    setContractShares(contractRule.shares);
+    setActiveContractReference(ppaDraft.reference);
+    setRuleId("contract_share_v1");
+    setEvidenceSession(null);
+    setEvidenceFileError(null);
+  }
+
   if (loadError) {
     return (
       <main className="error-page">
@@ -1003,6 +1156,7 @@ export function GreenProofApp() {
         </div>
         {view === "twin" && detailScenario ? <SiteTwin scenario={detailScenario} intervals={detailIntervals} index={safeTimeIndex} setIndex={(value) => { setTimeIndex(value); syncUrl({ time: value }); }} selectedTenantId={selectedTenantId} setSelectedTenantId={setSelectedTenantId} /> : null}
         {view === "matching" && detailScenario ? <DailyMatching scenario={detailScenario} intervals={detailIntervals} index={safeTimeIndex} setIndex={(value) => { setTimeIndex(value); syncUrl({ time: value }); }} selectedTenantId={selectedTenantId} /> : null}
+        {view === "contract" ? <PpaContractView scenario={scenario} draft={ppaDraft} setDraft={(draft) => { setPpaDraft(draft); setActiveContractReference(null); }} applyContract={applyPpaContract} activeContractReference={activeContractReference} /> : null}
         {view === "summary" && summaryScenario ? <PeriodSummary scenario={summaryScenario} intervals={summaryIntervals} /> : null}
         {view === "evidence" ? (
           <EvidenceView
