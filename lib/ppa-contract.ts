@@ -12,8 +12,8 @@ export interface PpaContractDraft {
   effectiveFrom: string;
   effectiveTo: string;
   pricePencePerKwh: number;
-  allocationBasis: "same_interval_generation_share";
-  unusedEntitlement: "redistribute_to_active_loads";
+  allocationBasis: "metered_onsite_consumption" | "same_interval_generation_share";
+  unusedEntitlement: "not_applicable" | "redistribute_to_active_loads";
   certificateTreatment: CertificateTreatment;
   tenantSharesPercent: Record<string, number>;
 }
@@ -57,19 +57,25 @@ export function convertPpaContract(
     (sum, tenantId) => sum + (Number.isFinite(draft.tenantSharesPercent[tenantId]) ? draft.tenantSharesPercent[tenantId] : 0),
     0,
   );
-  if (Math.abs(totalSharePercent - 100) > 0.001) {
+  if (draft.allocationBasis === "same_interval_generation_share" && Math.abs(totalSharePercent - 100) > 0.001) {
     errors.push("Tenant generation shares must total exactly 100%.");
   }
+
+  const allocationRule: AllocationRule | undefined = errors.length
+    ? undefined
+    : draft.allocationBasis === "metered_onsite_consumption"
+      ? { id: "pro_rata_demand_v1", version: "1.0.0" }
+      : {
+          id: "contract_share_v1",
+          version: "1.0.0",
+          shares: Object.fromEntries(tenantIds.map((tenantId) => [tenantId, draft.tenantSharesPercent[tenantId] / 100])),
+        };
 
   return {
     valid: errors.length === 0,
     errors,
     totalSharePercent,
-    allocationRule: errors.length ? undefined : {
-      id: "contract_share_v1",
-      version: "1.0.0",
-      shares: Object.fromEntries(tenantIds.map((tenantId) => [tenantId, draft.tenantSharesPercent[tenantId] / 100])),
-    },
+    allocationRule,
     modelParameters: {
       intervalMinutes: scenario.granularityMinutes,
       tenantDemandCap: true,

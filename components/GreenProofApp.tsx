@@ -171,8 +171,8 @@ const DEFAULT_PPA_DRAFT: PpaContractDraft = {
   effectiveFrom: "2022-01-01",
   effectiveTo: "2023-01-01",
   pricePencePerKwh: 14.5,
-  allocationBasis: "same_interval_generation_share",
-  unusedEntitlement: "redistribute_to_active_loads",
+  allocationBasis: "metered_onsite_consumption",
+  unusedEntitlement: "not_applicable",
   certificateTreatment: "retained_by_owner",
   tenantSharesPercent: DEFAULT_PPA_SHARES_PERCENT,
 };
@@ -571,38 +571,82 @@ function PpaContractView({
     });
   }
 
+  const isManagedTariff = draft.allocationBasis === "metered_onsite_consumption";
+
+  function selectAllocationBasis(allocationBasis: PpaContractDraft["allocationBasis"]) {
+    setDraft({
+      ...draft,
+      allocationBasis,
+      unusedEntitlement: allocationBasis === "metered_onsite_consumption" ? "not_applicable" : "redistribute_to_active_loads",
+    });
+  }
+
   return (
     <section className="view-stack" aria-labelledby="ppa-title">
       <div className="section-heading">
         <div>
-          <span className="eyebrow">Contract-to-model demonstration</span>
-          <h2 id="ppa-title">Turn a rooftop PPA into auditable allocation parameters</h2>
-          <p>This is a session-local modelling tool, not a signed contract. Commercial terms are separated from the fields that change GreenProof calculations.</p>
+          <span className="eyebrow">Tenant energy agreement demonstration</span>
+          <h2 id="ppa-title">Make rooftop electricity simple for tenants</h2>
+          <p>Choose the commercial promise first. GreenProof then translates it into a repeatable interval-by-interval allocation rule.</p>
         </div>
         <StatusPill tone={activeContractReference === draft.reference ? "green" : "amber"}>
           {activeContractReference === draft.reference ? "APPLIED TO MODEL" : "DRAFT · NOT APPLIED"}
         </StatusPill>
       </div>
 
-      <div className="ppa-grid">
+      <div className="ppa-plan-switch" aria-label="Tenant agreement type">
+        <button className={isManagedTariff ? "active" : ""} onClick={() => selectAllocationBasis("metered_onsite_consumption")}>
+          <small>RECOMMENDED · NO SHARES TO MANAGE</small>
+          <strong>Simple metered rooftop tariff</strong>
+          <span>The tenant uses electricity normally and pays the rooftop rate only for local electricity matched to its meter. Grid electricity automatically fills the shortfall.</span>
+        </button>
+        <button className={!isManagedTariff ? "active" : ""} onClick={() => selectAllocationBasis("same_interval_generation_share")}>
+          <small>ADVANCED · NEGOTIATED ENTITLEMENT</small>
+          <strong>Reserved allocation weights</strong>
+          <span>The parties agree how the on-site rooftop pool is shared when supply is scarce. Unused weight is redistributed to tenants still consuming.</span>
+        </button>
+      </div>
+
+      <section className="allocation-preview" aria-labelledby="allocation-preview-title">
+        <div className="allocation-preview-heading">
+          <div><small>FORECAST RESULT</small><h3 id="allocation-preview-title">Annual rooftop electricity allocated to each tenant</h3></div>
+          <span>{isManagedTariff ? "Meter-led allocation" : `${conversion.totalSharePercent.toFixed(1)}% weights entered`}</span>
+        </div>
+        {impact ? (
+          <div className="allocation-preview-grid">
+            {scenario.site.tenants.map((tenant, index) => (
+              <article key={tenant.id}>
+                <i>{String.fromCharCode(65 + index)}</i>
+                <div><strong>{tenant.label}</strong><small>{formatPercent(impact.tenantGreenShare[tenant.id])} of annual load</small></div>
+                <b>{formatEnergy(impact.tenantAllocationWh[tenant.id])}</b>
+              </article>
+            ))}
+          </div>
+        ) : <p>Resolve the agreement errors to preview its allocation impact.</p>}
+      </section>
+
+      <div className={`ppa-grid ${isManagedTariff ? "managed" : "advanced"}`}>
         <div className="ppa-form-card">
           <div className="ppa-card-heading"><span>01</span><div><small>COMMERCIAL SOURCE</small><h3>Key PPA terms</h3></div></div>
           <div className="ppa-field-grid">
             <label><span>Contract reference</span><input value={draft.reference} onChange={(event) => setDraft({ ...draft, reference: event.target.value })} /></label>
-            <label><span>Energy price</span><div className="input-suffix"><input type="number" min="0" step="0.1" value={draft.pricePencePerKwh} onChange={(event) => setDraft({ ...draft, pricePencePerKwh: Number(event.target.value) })} /><i>p/kWh</i></div></label>
+            <label><span>Rooftop electricity price</span><div className="input-suffix"><input type="number" min="0" step="0.1" value={draft.pricePencePerKwh} onChange={(event) => setDraft({ ...draft, pricePencePerKwh: Number(event.target.value) })} /><i>p/kWh</i></div></label>
             <label><span>Effective from</span><input type="date" value={draft.effectiveFrom} onChange={(event) => setDraft({ ...draft, effectiveFrom: event.target.value })} /></label>
             <label><span>Effective to</span><input type="date" value={draft.effectiveTo} onChange={(event) => setDraft({ ...draft, effectiveTo: event.target.value })} /></label>
-            <label className="wide-field"><span>Allocation basis</span><select value={draft.allocationBasis} disabled><option value="same_interval_generation_share">Fixed share of same-interval rooftop generation</option></select><small>Converted to contract_share_v1; every allocation remains capped by that tenant&apos;s simultaneous demand.</small></label>
-            <label className="wide-field"><span>Unused entitlement</span><select value={draft.unusedEntitlement} disabled><option value="redistribute_to_active_loads">Redistribute to users with remaining same-interval demand</option></select><small>The current engine conserves every on-site Wh by redistributing unused shares before any genuine excess is exported.</small></label>
             <label className="wide-field"><span>Associated green certificate disclosure</span><select value={draft.certificateTreatment} onChange={(event) => setDraft({ ...draft, certificateTreatment: event.target.value as PpaContractDraft["certificateTreatment"] })}>
               {(Object.keys(CERTIFICATE_LABELS) as PpaContractDraft["certificateTreatment"][]).map((item) => <option value={item} key={item}>{CERTIFICATE_LABELS[item]}</option>)}
             </select><small>This disclosure does not change the measured fact of local, same-interval rooftop consumption.</small></label>
           </div>
+          <div className="tenant-promise">
+            <small>WHAT THE TENANT NEEDS TO UNDERSTAND</small>
+            <strong>Use electricity as normal. Pay {draft.pricePencePerKwh.toFixed(1)} p/kWh for the rooftop amount actually matched to your meter; the grid supplies everything else.</strong>
+            <p>No tenant is charged for rooftop electricity it did not consume. Certificate ownership is disclosed separately: {CERTIFICATE_LABELS[draft.certificateTreatment].toLowerCase()}.</p>
+          </div>
         </div>
 
-        <div className="ppa-form-card">
+        <div className="ppa-form-card ppa-share-controls">
           <div className="ppa-card-heading"><span>02</span><div><small>GENERATION ENTITLEMENT</small><h3>Tenant shares</h3></div><strong className={Math.abs(conversion.totalSharePercent - 100) < 0.001 ? "share-valid" : "share-invalid"}>{conversion.totalSharePercent.toFixed(1)}%</strong></div>
-          <p className="ppa-helper">A share is applied to rooftop generation in each interval. A user can only certify the smaller of its entitlement and its actual load; unused entitlement is redistributed under the selected rule.</p>
+          <p className="ppa-helper">These percentages are weights over the rooftop electricity actually consumed on site, not fixed rights to total PV output. Allocation remains capped by simultaneous demand; unused weight is redistributed to active tenants.</p>
           <div className="share-editor">
             {scenario.site.tenants.map((tenant, index) => (
               <label key={tenant.id}>
@@ -617,18 +661,20 @@ function PpaContractView({
 
       <div className="ppa-output-grid">
         <article className="model-translation">
-          <div className="ppa-card-heading"><span>03</span><div><small>MODEL TRANSLATION</small><h3>Executable GreenProof parameters</h3></div></div>
+          <div className="ppa-card-heading"><span>03</span><div><small>MODEL TRANSLATION</small><h3>What GreenProof will calculate</h3></div></div>
           <dl>
-            <div><dt>Rule</dt><dd><code>contract_share_v1@1.0.0</code></dd></div>
+            <div><dt>Tenant experience</dt><dd>{isManagedTariff ? "Automatic meter-led settlement" : "Negotiated allocation weights"}</dd></div>
+            <div><dt>Engine rule</dt><dd><code>{conversion.allocationRule?.id ?? "invalid"}@1.0.0</code></dd></div>
             <div><dt>Settlement interval</dt><dd>{scenario.granularityMinutes} minutes</dd></div>
             <div><dt>Tenant cap</dt><dd>Actual same-interval demand</dd></div>
             <div><dt>Site cap</dt><dd>Same-interval onsite matched generation</dd></div>
+            <div><dt>Grid shortfall</dt><dd>Automatic top-up supply</dd></div>
             <div><dt>Certificate disclosure</dt><dd>{CERTIFICATE_LABELS[draft.certificateTreatment]}</dd></div>
           </dl>
-          <pre>{JSON.stringify(conversion.allocationRule ?? { errors: conversion.errors }, null, 2)}</pre>
+          <details className="model-json"><summary>Inspect generated engine parameters</summary><pre>{JSON.stringify(conversion.allocationRule ?? { errors: conversion.errors }, null, 2)}</pre></details>
           {conversion.errors.length ? <div className="contract-errors" role="alert">{conversion.errors.map((error) => <span key={error}>{error}</span>)}</div> : null}
           <button className="primary-button" disabled={!conversion.allocationRule} onClick={() => conversion.allocationRule && applyContract(conversion.allocationRule)}>
-            Apply contract shares to simulation <span>→</span>
+            Apply this tenant agreement to simulation <span>→</span>
           </button>
           <p className="privacy-note">Evidence packages bind the applied rule and tenant shares. Contract reference, price and certificate disclosure remain demonstration metadata in this MVP and are not yet signed or embedded in EvidencePackage.</p>
         </article>
@@ -1076,10 +1122,12 @@ export function GreenProofApp() {
   }
 
   function applyPpaContract(contractRule: AllocationRule) {
-    if (!contractRule.shares) return;
-    setContractShares(contractRule.shares);
+    if (contractRule.id === "contract_share_v1") {
+      if (!contractRule.shares) return;
+      setContractShares(contractRule.shares);
+    }
     setActiveContractReference(ppaDraft.reference);
-    setRuleId("contract_share_v1");
+    setRuleId(contractRule.id);
     setEvidenceSession(null);
     setEvidenceFileError(null);
   }

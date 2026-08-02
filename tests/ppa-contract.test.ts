@@ -47,6 +47,18 @@ test("PPA terms convert deterministically to contract-share engine parameters", 
   assert.equal(first.modelParameters.tenantDemandCap, true);
 });
 
+test("simple metered tariff converts to demand-led allocation without tenant shares", async () => {
+  const scenario = await pilotScenario();
+  const draft = validDraft();
+  draft.allocationBasis = "metered_onsite_consumption";
+  draft.unusedEntitlement = "not_applicable";
+  draft.tenantSharesPercent["tenant-a"] = 0;
+  const converted = convertPpaContract(scenario, draft);
+  assert.equal(converted.valid, true);
+  assert.equal(converted.allocationRule?.id, "pro_rata_demand_v1");
+  assert.equal(converted.allocationRule?.shares, undefined);
+});
+
 test("converted PPA rule conserves every onsite Wh and caps tenant allocation", async () => {
   const scenario = await pilotScenario();
   const converted = convertPpaContract(scenario, validDraft());
