@@ -290,6 +290,17 @@ input[type="range"] { width: 100%; accent-color: var(--green); cursor: pointer; 
 .evidence-grid { display: grid; grid-template-columns: 1.5fr minmax(300px,.8fr); gap: 20px; align-items: start; }
 .source-list { display: grid; gap: 10px; }
 .source-list > h3 { margin: 0 0 5px; font-size: 13px; text-transform: uppercase; letter-spacing: .08em; }
+.ingestion-posture { background: #fff; border: 1px solid var(--line); border-radius: 9px; padding: 18px; display: grid; gap: 13px; box-shadow: 0 7px 22px rgba(17,35,30,.04); }
+.ingestion-heading { display: flex; justify-content: space-between; align-items: start; gap: 16px; }
+.ingestion-heading small { color: var(--green); font-size: 8px; letter-spacing: .13em; font-weight: 900; }
+.ingestion-heading h3 { margin: 3px 0 0; font-size: 16px; }
+.ingestion-posture > p { margin: 0; color: var(--muted); font-size: 10px; line-height: 1.5; }
+.ingestion-options { display: grid; gap: 10px; }
+.ingestion-options label { border-top: 1px solid #edf0ee; padding-top: 10px; display: grid; grid-template-columns: 120px minmax(0,1fr); gap: 5px 12px; align-items: center; }
+.ingestion-options label > span { font-size: 10px; font-weight: 800; }
+.ingestion-options select { min-width: 0; border: 1px solid #cdd7d3; border-radius: 5px; background: #fbfcfb; padding: 8px 10px; color: var(--ink); font-size: 10px; font-weight: 700; }
+.ingestion-options small { grid-column: 2; color: var(--muted); font-size: 8px; line-height: 1.5; }
+.ingestion-options small strong { color: var(--ink); }
 .source-card { background: #fff; border: 1px solid var(--line); border-radius: 8px; padding: 0 16px; }
 .source-card summary { padding: 15px 0; display: flex; justify-content: space-between; align-items: center; cursor: pointer; list-style: none; }
 .source-card summary::-webkit-details-marker { display:none; }
@@ -428,6 +439,9 @@ footer { border-top: 1px solid var(--line); padding: 18px clamp(18px,4vw,64px); 
   .share-ring { justify-self: center; }
   .tenant-summary dl { grid-column: 1; }
   .source-card summary > div { align-items: start; flex-direction: column; }
+  .ingestion-heading { display: grid; }
+  .ingestion-options label { grid-template-columns: 1fr; }
+  .ingestion-options small { grid-column: 1; }
   .evidence-file-actions { grid-template-columns: 1fr; }
   .proof-status { align-items: start; flex-direction: column; }
   .proof-status > small { text-align: left; }

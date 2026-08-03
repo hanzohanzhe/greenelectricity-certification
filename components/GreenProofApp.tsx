@@ -33,6 +33,15 @@ import {
   verifyEvidenceFile,
   verifyEvidenceInterval,
 } from "../lib/evidence-file";
+import {
+  DEFAULT_DEVICE_INTERFACE_SELECTION,
+  DEVICE_INTERFACE_OPTIONS,
+  type DeviceInterfaceSelection,
+  type OperationalStream,
+  describeHistoricalSource,
+  selectedDeviceOption,
+} from "../lib/data-source-options";
+import { buildHumanReport, humanReportFilename } from "../lib/human-report";
 
 type View = "twin" | "matching" | "contract" | "summary" | "evidence";
 type AnalysisScope = "year" | "month" | "day";
@@ -74,6 +83,12 @@ const CERTIFICATE_LABELS: Record<PpaContractDraft["certificateTreatment"], strin
   retained_by_owner: "Certificate retained by owner",
   sold_separately: "Certificate sold separately",
   unknown: "Certificate status unknown",
+};
+
+const OPERATIONAL_STREAM_LABELS: Record<OperationalStream, string> = {
+  generation: "Rooftop generation",
+  gridExchange: "Grid import / export",
+  tenantDemand: "Tenant demand",
 };
 
 const RULE_LABELS: Record<AllocationRuleId, { label: string; note: string }> = {
@@ -464,11 +479,24 @@ function DailyMatching({
 function PeriodSummary({
   scenario,
   intervals,
+  deviceSelection,
 }: {
   scenario: Scenario;
   intervals: IntervalAllocation[];
+  deviceSelection: DeviceInterfaceSelection;
 }) {
   const summary = summarise(scenario, intervals);
+
+  function downloadReport() {
+    const report = buildHumanReport(scenario, intervals, deviceSelection);
+    const url = URL.createObjectURL(new Blob([report], { type: "text/html;charset=utf-8" }));
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = humanReportFilename(scenario);
+    link.click();
+    URL.revokeObjectURL(url);
+  }
+
   return (
     <section className="view-stack" aria-labelledby="summary-title">
       <div className="section-heading">
@@ -477,6 +505,7 @@ function PeriodSummary({
           <h2 id="summary-title">A day, reconciled to the watt-hour</h2>
           <p>Totals are calculated from interval results, not separately recreated in the interface.</p>
         </div>
+        <button className="primary-button" onClick={downloadReport}>Download one-page report <span>↓</span></button>
       </div>
       <div className="metric-grid">
         <Metric label="Rooftop generation" value={formatEnergy(summary.generationWh)} detail="Modelled at Cambridge coordinates" tone="solar" />
@@ -704,6 +733,8 @@ function EvidenceView({
   loadProof,
   toggleTamper,
   verifySelectedInterval,
+  deviceSelection,
+  setDeviceSelection,
 }: {
   scenario: Scenario;
   session: EvidenceSession | null;
@@ -714,6 +745,8 @@ function EvidenceView({
   loadProof: (file: File) => Promise<void>;
   toggleTamper: () => Promise<void>;
   verifySelectedInterval: (leafIndex: number) => Promise<void>;
+  deviceSelection: DeviceInterfaceSelection;
+  setDeviceSelection: (selection: DeviceInterfaceSelection) => void;
 }) {
   const evidencePackage = session?.activePackage;
   const verification = session?.verification;
@@ -733,19 +766,38 @@ function EvidenceView({
       </div>
       <div className="evidence-grid">
         <div className="source-list">
+          <section className="ingestion-posture" aria-labelledby="ingestion-title">
+            <div className="ingestion-heading"><div><small>HISTORICAL OPERATIONAL DATA</small><h3 id="ingestion-title">Electrical data connection posture</h3></div><StatusPill tone="blue">INTERFACE PLANNING</StatusPill></div>
+            <p>The current Pilot reads a historical interval archive. Select how each stream could later be collected from operating electrical equipment; this does not claim that a live connector is active.</p>
+            <div className="ingestion-options">
+              {(["generation", "gridExchange", "tenantDemand"] as const).map((stream) => {
+                const selected = selectedDeviceOption(stream, deviceSelection);
+                return (
+                  <label key={stream}>
+                    <span>{OPERATIONAL_STREAM_LABELS[stream]}</span>
+                    <select value={deviceSelection[stream]} onChange={(event) => setDeviceSelection({ ...deviceSelection, [stream]: event.target.value })}>
+                      {DEVICE_INTERFACE_OPTIONS[stream].map((option) => <option value={option.id} key={option.id}>{option.label}</option>)}
+                    </select>
+                    <small><strong>{selected.deviceExamples}</strong> · {selected.interfaces.join(" · ")} · {selected.status === "current-demo" ? "Current historical-file route" : "Connector can be commissioned for a Pilot"}</small>
+                  </label>
+                );
+              })}
+            </div>
+          </section>
           <h3>Source manifest</h3>
           {scenario.sources.map((source) => (
             <details className="source-card" key={source.id}>
               <summary>
                 <div>
-                  <StatusPill tone={source.provenance === "modelled" ? "blue" : source.provenance === "profile_scaled" ? "violet" : "green"}>
-                    {source.provenance.replace("_", " ")}
-                  </StatusPill>
+                  <StatusPill tone={source.provenance === "modelled" ? "blue" : source.provenance === "profile_scaled" ? "violet" : "green"}>HISTORICAL OPERATIONAL DATA</StatusPill>
                   <strong>{source.name}</strong>
                 </div>
                 <span aria-hidden="true">＋</span>
               </summary>
               <dl>
+                <div><dt>Record class</dt><dd>{describeHistoricalSource(source).recordClass}</dd></div>
+                <div><dt>Source date</dt><dd>{describeHistoricalSource(source).sourceDate}</dd></div>
+                <div><dt>Reliability</dt><dd>{describeHistoricalSource(source).reliability}</dd></div>
                 <div><dt>Version</dt><dd>{source.version}</dd></div>
                 <div><dt>Licence</dt><dd>{source.license}</dd></div>
                 <div><dt>Source hash</dt><dd><code>{shortHash(source.sha256)}</code></dd></div>
@@ -904,6 +956,7 @@ export function GreenProofApp() {
   const [evidenceSession, setEvidenceSession] = useState<EvidenceSession | null>(null);
   const [evidenceOperation, setEvidenceOperation] = useState<EvidenceOperation>("idle");
   const [evidenceFileError, setEvidenceFileError] = useState<EvidenceFileIssue | null>(null);
+  const [deviceSelection, setDeviceSelection] = useState<DeviceInterfaceSelection>(DEFAULT_DEVICE_INTERFACE_SELECTION);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -1205,7 +1258,7 @@ export function GreenProofApp() {
         {view === "twin" && detailScenario ? <SiteTwin scenario={detailScenario} intervals={detailIntervals} index={safeTimeIndex} setIndex={(value) => { setTimeIndex(value); syncUrl({ time: value }); }} selectedTenantId={selectedTenantId} setSelectedTenantId={setSelectedTenantId} /> : null}
         {view === "matching" && detailScenario ? <DailyMatching scenario={detailScenario} intervals={detailIntervals} index={safeTimeIndex} setIndex={(value) => { setTimeIndex(value); syncUrl({ time: value }); }} selectedTenantId={selectedTenantId} /> : null}
         {view === "contract" ? <PpaContractView scenario={scenario} draft={ppaDraft} setDraft={(draft) => { setPpaDraft(draft); setActiveContractReference(null); }} applyContract={applyPpaContract} activeContractReference={activeContractReference} /> : null}
-        {view === "summary" && summaryScenario ? <PeriodSummary scenario={summaryScenario} intervals={summaryIntervals} /> : null}
+        {view === "summary" && summaryScenario ? <PeriodSummary scenario={summaryScenario} intervals={summaryIntervals} deviceSelection={deviceSelection} /> : null}
         {view === "evidence" ? (
           <EvidenceView
             scenario={evidenceScenario ?? scenario}
@@ -1217,6 +1270,8 @@ export function GreenProofApp() {
             loadProof={loadProof}
             toggleTamper={toggleTamper}
             verifySelectedInterval={verifySelectedInterval}
+            deviceSelection={deviceSelection}
+            setDeviceSelection={setDeviceSelection}
           />
         ) : null}
       </div>

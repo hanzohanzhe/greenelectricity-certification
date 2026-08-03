@@ -1,9 +1,11 @@
 # GreenProof MVP
 
-GreenProof is a public-data-driven digital twin for a shared rooftop PV system
-serving two tenants. It reconstructs interval-level generation, demand, local
-matching, grid import and export; then commits the result to a reproducible
-evidence manifest and Merkle root.
+GreenProof is a public-data-driven digital twin for a shared rooftop PV system.
+The current complex Pilot models one 100 kW-peak rooftop source serving eight
+distinct, approximately 10 kW-peak tenant load profiles on a shared low-voltage
+bus. It reconstructs hourly generation, demand, tenant-level local matching,
+grid import and export across a full year; then commits the result to a
+reproducible evidence manifest and Merkle root.
 
 This is a demonstration, not an official energy certificate. It does not issue
 tokens, claim avoided emissions, score additionality, or prove the truth of a
@@ -20,8 +22,26 @@ npm test
 npm run dev
 ```
 
-The published demo is fully offline after build: all three small scenario
-packages are bundled under `public/data/scenarios`.
+The published demo is fully offline after build. Three compact public-data
+source scenarios are bundled under `public/data/scenarios` and deterministically
+expanded into the annual eight-tenant Pilot in the browser.
+
+## Current Pilot capabilities
+
+- Simulated 100 kW-peak rooftop PV and eight distinct tenant demand profiles.
+- Full-year analysis with month and day selection plus hourly drill-down.
+- Deterministic integer-Wh reconciliation of generation, local consumption,
+  tenant allocation, grid import and export.
+- Meter-led pro-rata, priority and contract-share allocation rules.
+- A PPA-to-model demonstration with a simple metered rooftop tariff and an
+  advanced reserved-weight mode.
+- Tenant-level explanations of when and why rooftop electricity was or was not
+  allocated.
+- Historical-operational-data labels with source dates, categorical reliability
+  descriptions and selectable future device/API ingestion routes.
+- A downloadable one-page human-readable operational evidence report.
+- Downloadable, versioned EvidencePackage JSON with canonical hashing, Merkle
+  inclusion proofs and independent verification.
 
 ## Architecture
 
